@@ -37,7 +37,7 @@ export default function Cart() {
   // Check if it's already a full URL (for seeded data maybe)
   if (imagePath.startsWith('http')) return imagePath;
   // Otherwise construct the proper URL
-  return `${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/uploads/${imagePath}`;
+  return `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/uploads/${imagePath}`;
 };
 
   // function to delete item from cart
