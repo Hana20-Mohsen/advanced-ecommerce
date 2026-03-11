@@ -6,6 +6,7 @@ import { useFormik } from 'formik'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import MainLayOut from '../layouts/MainLayOut';
+import {toast} from 'react-toastify'
 
 
 
@@ -17,6 +18,8 @@ let [loading , setloading]=useState(true);
 //send data to api
 
   function sendDataToApi(values){
+    console.log(values);
+    
     setloading(false);
  axios.post('http://localhost:8000/api/v1/user/register' , values)
  .then(({data})=>{
@@ -25,11 +28,16 @@ let [loading , setloading]=useState(true);
   //------------- if condition data.message=="success" -------------------
  if(data){
   console.log("your rsponse  = "+data)
-  navigate('/Signin')
+  navigate('/Signin' , {
+    state:{message:'A confirmation email has been sent. Please check your inbox.'}
+  })
  }
  }).catch(err=>{
+  console.log(err);
+  
   setErrmsg(err?.response?.data?.message );
   console.log(err?.response?.data?.message )
+  console.log(err?.response?.data )
  })
 }
 

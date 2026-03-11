@@ -74,6 +74,7 @@ export default function Products() {
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const response = await updateProduct(currentProduct._id, values);
+      console.log(response);
       
       if (response.status === 'success') {
         // Update the product in the local state

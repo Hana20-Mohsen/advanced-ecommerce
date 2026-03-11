@@ -1,11 +1,12 @@
 import Order from "../../../DB/models/order.model.js";
+import { asyncHandler } from "../../../utilities/error/error.js";
 
-const bestSeller=async(req , res , next)=>{
-    try {
-        console.log('im here');
-        
+const bestSeller=asyncHandler(async(req , res , next)=>{
+  console.log('entered best seller');
+  
         const orders= await Order.find().select('orderItems -_id');
         console.log(orders);
+        
         const productSales = {}; 
         orders.forEach(order => {
   order.orderItems.forEach(item => {
@@ -19,15 +20,9 @@ const bestSellers = Object.entries(productSales)
   .sort((a, b) => b[1] - a[1]) // sort by quantity descending
   .slice(0, 3) // top 3 products
   .map(([productId, count]) => ({ productId, sold: count }));
-
-console.log(bestSellers);
-        
         return res.status(200).json({status:'success' , bestSellers ,productSales})
-        
-    } catch (error) {
-        return res.status(500).json({status:'fail' , message:error.message})
-    }
-}
+
+})
 
 
 export default bestSeller

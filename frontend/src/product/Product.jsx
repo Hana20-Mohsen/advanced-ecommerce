@@ -1,12 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useQuery , useQueryClient } from 'react-query';
 import { Link, useParams } from "react-router-dom";
 import { storeContext } from "../context/storeContext";
 import { toast } from "react-toastify";
 import { WishListContext } from "../context/WishlistContext";
 import axios from "axios";
-import { useQuery } from "react-query";
 
 export default function Product({ item }) {
+  const queryClient = useQueryClient();
   // console.log(item.images[0]);
 
   let {
@@ -47,6 +48,7 @@ export default function Product({ item }) {
       setInCart(items);
       setCounter(data.length);
       setBtnLoading(true);
+      queryClient.invalidateQueries(["cart"]);
       toast.success("Product added successfully !");
     } else if (data?.status == "remove") {
       let items = data.cartItems.map((element) => element.product._id);
@@ -100,6 +102,9 @@ export default function Product({ item }) {
       toast.warning("Product deleted successfully !");
     }
   }
+    useEffect(() => {
+    queryClient.invalidateQueries(["cart"]);
+    }, []);
 
   return (
     <>

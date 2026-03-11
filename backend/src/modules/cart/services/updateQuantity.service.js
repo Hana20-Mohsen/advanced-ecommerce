@@ -1,8 +1,7 @@
-
 import Cart from "../../../DB/models/Cart.model.js";
 import Product from "../../../DB/models/Product.model.js";
-const updateQuantity = async (req, res, next) => {
-    try {
+import { asyncHandler } from "../../../utilities/error/error.js";
+const updateQuantity = asyncHandler(async (req, res, next) => {
         const { operation } = req.body;
         const productId = req.params.id;
         const userId = req.user._id;
@@ -10,19 +9,13 @@ const updateQuantity = async (req, res, next) => {
         // Get product info for stock validation
         const product = await Product.findById(productId);
         if (!product) {
-            return res.status(404).json({ 
-                status: 'fail', 
-                message: 'Product not found' 
-            });
+            return next(new Error('Product not found' , {cause:404}))
         }
 
         // Find user's cart
         const cart = await Cart.findOne({ user: userId });
         if (!cart) {
-            return res.status(404).json({ 
-                status: 'fail', 
-                message: 'Cart not found' 
-            });
+            return next(new Error('Cart not found' , {cause:404}))
         }
 
         // Find the item in cart
@@ -31,10 +24,7 @@ const updateQuantity = async (req, res, next) => {
         );
         
         if (itemIndex === -1) {
-            return res.status(404).json({ 
-                status: 'fail', 
-                message: 'Product not found in cart' 
-            });
+            return next(new Error('Product not found in cart' , {cause:404}))
         }
 
         // Update quantity based on operation
@@ -48,23 +38,14 @@ const updateQuantity = async (req, res, next) => {
                     cart.items[itemIndex].quantity -=1;
                     break;
                 default:
-                    return res.status(400).json({
-                        status: 'fail',
-                        message: 'Invalid operation'
-                    });
+                    return next(new Error('Invalid operation' , {cause:400}))
             }
 
             if (cart.items[itemIndex].quantity > product.countInStock) {
-                return res.status(400).json({ 
-                    status: 'fail', 
-                    message: 'Quantity exceeds available stock' 
-                });
+                return next(new Error('Quantity exceeds available stock' , {cause:400}))
             }
             else if(cart.items[itemIndex].quantity<1){
-                return res.status(400).json({ 
-                    status: 'fail', 
-                    message: "Quantity can't be less than 1" 
-                });
+                return next(new Error("Quantity can't be less than 1" , {cause:400}))
             }
         
 
@@ -81,13 +62,6 @@ const updateQuantity = async (req, res, next) => {
             length: updatedCart.items.length,
             totalPrice
         });
-
-    } catch (error) {
-        return res.status(500).json({ 
-            message: 'Server error', 
-            error: error.message 
-        });
-    }
-}
+})
 
 export default updateQuantity;

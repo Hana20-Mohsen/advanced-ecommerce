@@ -2,6 +2,7 @@ import Stripe from 'stripe';
 import paypal from 'paypal-rest-sdk';
 import Order from '../../../DB/models/order.model.js';
 import dotenv from 'dotenv';
+import { asyncHandler } from '../../../utilities/error/error.js';
 
 dotenv.config();
 
@@ -16,21 +17,20 @@ paypal.configure({
 });
 
 // Process Payment
-export const processPayment = async (req, res) => {
-  try {
+export const processPayment = asyncHandler(async (req, res) => {
     const { orderId, paymentMethod } = req.body;
     const order = await Order.findById(orderId).populate('user');
 
     if (!order) {
-      return res.status(404).json({ status: 'fail', message: 'Order not found' });
+      return next(new Error('Order not found' , {cause:404}))
     }
 
     if (order.user._id.toString() !== req.user._id.toString()) {
-      return res.status(401).json({ status: 'fail', message: 'Not authorized' });
+      return next(new Error('Not authorized' , {cause:401}))
     }
 
     if (order.isPaid) {
-      return res.status(400).json({ status: 'fail', message: 'Order is already paid' });
+      return next(new Error('Order is already paid' , {cause:400}))
     }
 
     let paymentResult;
@@ -40,7 +40,7 @@ export const processPayment = async (req, res) => {
       const { paymentId } = req.body;
       
       if (!paymentId) {
-        return res.status(400).json({ status: 'fail', message: 'Payment ID is required' });
+        return next(new Error('Payment ID is required' , {cause:400}))
       }
 
       const paymentIntent = await stripe.paymentIntents.create({
@@ -53,7 +53,7 @@ export const processPayment = async (req, res) => {
       });
 
       if (paymentIntent.status !== 'succeeded') {
-        return res.status(400).json({ status: 'fail', message: 'Payment failed' });
+        return next(new Error('Payment failed' , {cause:400}))
       }
 
       paymentResult = {
@@ -67,7 +67,7 @@ export const processPayment = async (req, res) => {
       const { paymentId, payerId } = req.body;
       
       if (!paymentId || !payerId) {
-        return res.status(400).json({ status: 'fail', message: 'Payment ID and Payer ID are required' });
+        return next(new Error('Payment ID and Payer ID are required' , {cause:400}))
       }
 
       const executePayment = {
@@ -83,7 +83,6 @@ export const processPayment = async (req, res) => {
       return new Promise((resolve, reject) => {
         paypal.payment.execute(paymentId, executePayment, async (error, payment) => {
           if (error) {
-            console.error(error);
             return res.status(400).json({ status: 'fail', message: 'PayPal payment failed', error: error.response.details });
           }
 
@@ -129,13 +128,8 @@ export const processPayment = async (req, res) => {
       status: 'success', 
       message: 'Payment successful',
       order
-    });
-
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ status: 'fail', message: 'Payment processing failed', error: error.message });
-  }
-};
+    })
+})
 
 export const createPayPalPayment = async (req, res) => {
    try {

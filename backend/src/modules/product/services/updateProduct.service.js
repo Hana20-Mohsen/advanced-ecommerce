@@ -1,27 +1,23 @@
 import Product from "../../../DB/models/Product.model.js";
+import { asyncHandler } from "../../../utilities/error/error.js";
 
-const updateProduct=async(req , res , next)=>{
-    try {
-        console.log('i enterd');
-        
+const updateProduct=asyncHandler(async(req , res , next)=>{
+  console.log('im here');
+  
          const updates = req.body;
-         const productId=req.params.productId;
          console.log(updates);
          
-         
+         const productId=req.params.productId;
         const productToUpdate= await Product.findById(productId)
+        
+        
 
           if(!productToUpdate){
-            return res.status(404).json({status:'fail' , message:'order not found'})
+            return next(new Error('order not found' , {cause:404}))
         }
-
         let productAfterUpdates= await Product.findByIdAndUpdate(productId , updates , {new:true})
          res.status(200).json({ status: 'success', productAfterUpdates });
-        } catch (error) {
-             return res.status(500).json({status:'fail' , message:error.message})
-        
-    }
-}
+})
 
 
 export default updateProduct

@@ -1,10 +1,8 @@
 
 import Order from '../../../DB/models/order.model.js';
 import Cart from '../../../DB/models/Cart.model.js';
-
- const createOrder = async (req, res) => {
-   try {
-     
+import { asyncHandler } from '../../../utilities/error/error.js';
+ const createOrder =asyncHandler( async (req, res) => {
      const user=req.user;
      const {  shippingAddress, paymentMethod } = req.body;
     const cart= await Cart.findOne({user:user}).select('items _id').populate({
@@ -20,7 +18,7 @@ import Cart from '../../../DB/models/Cart.model.js';
 
 
     if (orderItems && orderItems.length === 0) {
-     return res.status(400).json({status:'fail' , message:'no items found in cart'})
+     return next(new Error('no items found in cart' , {cause:404}))
     }
 
     const taxPrice = itemsPrice * 0.15;
@@ -39,10 +37,7 @@ import Cart from '../../../DB/models/Cart.model.js';
     });
 
    return res.status(201).json({status:'success',createdOrder:order});
-  } catch (error) {
-   return res.status(500).json({status:'fail', error: error.message });
-  }
-};
+})
 
 
 export default createOrder

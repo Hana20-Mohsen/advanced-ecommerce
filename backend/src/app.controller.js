@@ -11,12 +11,16 @@ import path from 'path'
 import { fileURLToPath } from 'url';
 import cors from 'cors';
 import fs from 'fs'
+import { globalErrorHandling } from "./utilities/error/error.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+console.log('__dirname : ' , __dirname);
+
 
 const bootstrap=(app , express)=>{
     app.use(express.json());
+    // app.use('/static', express.static(path.join(__dirname, 'utilities/email/template/img')));
 
     const allowedOrigins = [
         'http://localhost:3000',
@@ -68,6 +72,8 @@ const bootstrap=(app , express)=>{
             message:'In-Valid routing!!'
         })
     })
+
+    app.use(globalErrorHandling)
 
     connectDB()
 }

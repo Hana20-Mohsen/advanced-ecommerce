@@ -15,7 +15,7 @@ export default function BestSeller() {
       try {
         const response = await getBastsellers()
         
-        setBestSellers(response.bestSellers);
+        setBestSellers(response?.bestSellers || []);
         setLoading(false);
       } catch (err) {
         setError('Failed to fetch best sellers.');

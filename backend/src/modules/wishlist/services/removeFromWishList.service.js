@@ -1,44 +1,42 @@
 import Wishlist from "../../../DB/models/wishlist.model.js";
 import Product from "../../../DB/models/Product.model.js";
-import jwt from 'jsonwebtoken';
-
 const removeFromWishlist = async (req, res, next) => {
     try {
         const productId = req.params.id;
-        const { authorization } = req.headers;
-        const [Bearer, token] = authorization.split(" ") || [];
+        // const { authorization } = req.headers;
+        // const [Bearer, token] = authorization.split(" ") || [];
         
-        if (!token || !Bearer) {
-            return res.status(400).json({ message: "Invalid token components" });
-        }
+        // if (!token || !Bearer) {
+        //     return res.status(400).json({ message: "Invalid token components" });
+        // }
 
-        let signature = undefined;
-        switch (Bearer) {
-            case "admin":
-                signature = process.env.TOKEN_SIGNATURE_ADMIN;
-                break;
-            case "Bearer":
-                signature = process.env.TOKEN_SIGNATURE;
-                break;
-            default:
-                break;
-        }
+        // let signature = undefined;
+        // switch (Bearer) {
+        //     case "admin":
+        //         signature = process.env.TOKEN_SIGNATURE_ADMIN;
+        //         break;
+        //     case "Bearer":
+        //         signature = process.env.TOKEN_SIGNATURE;
+        //         break;
+        //     default:
+        //         break;
+        // }
         
-        const decoded = jwt.decode(token, signature);
-        const userId = decoded.id;
+        // const decoded = jwt.decode(token, signature);
+        // const userId = decoded.id;
         
         // Find user's wishlist
-        const wishlist = await Wishlist.findOne({ user: userId });
+        const wishlist = await Wishlist.findOne({ user: req.user._id });
         
         if (!wishlist) {
-            return res.status(404).json({ message: 'Wishlist not found' });
+            return next(new Error('Wishlist not found' , {cause:404}))
         }
 
         // Check if product exists in wishlist
         const productIndex = wishlist.products.indexOf(productId);
         
         if (productIndex === -1) {
-            return res.status(404).json({ message: 'Product not found in wishlist' });
+             return next(new Error('Product not found in wishlist' , {cause:404}))
         }
 
         // Remove product from wishlist

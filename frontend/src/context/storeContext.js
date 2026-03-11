@@ -17,11 +17,17 @@ async function addToCart(productId , quantity=1){
 
 // function get items form cart
  async function getCart(){
-  return axios.get('http://localhost:8000/api/v1/cart/all',{
+  let token=Cookies.get('token');
+  console.log(token);
+  
+  let data =await axios.get('http://localhost:8000/api/v1/cart/all',{
    headers:{
      authorization:`Bearer ${Cookies.get('token')}`
    }
   }).then(({data})=>data).catch(err => err)
+  console.log(data);
+  
+  return data
 }
 
 

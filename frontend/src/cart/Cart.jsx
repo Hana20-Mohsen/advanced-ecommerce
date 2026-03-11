@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useQuery , useQueryClient } from "react-query";
 import { storeContext } from "../context/storeContext";
 import Loader from "../Loader/Loader";
 import EmptyCart from "../EmptyCart/EmptyCart";
@@ -7,6 +8,7 @@ import { Link } from "react-router-dom";
 import './cart.style.css'
 
 export default function Cart() {
+  const queryClient = useQueryClient();
   // get cart context
   let {
     getCart,
@@ -14,12 +16,20 @@ export default function Cart() {
     setCounter,
     UpdateQuantity,
     deleteCart,
+    setInCart,
     addToCart,
   } = useContext(storeContext);
-  let [Loading, setLoading] = useState(true);
+  // let [Loading, setLoading] = useState(true);
 
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [showConfirm, setShowConfirm] = useState(false);
+
+    const { data, error, isLoading } = useQuery({
+    queryKey: ["cart"],
+    queryFn: () => getCart(),
+    placeholderData: (prev) => prev,
+    staleTime: 30_000,
+  });
 
 
    const getImageUrl = (imagePath) => {
@@ -32,15 +42,28 @@ export default function Cart() {
 
   // function to delete item from cart
 
+  // async function deleteCartItem(id) {
+  //   let data = await reomveCartItem(id);
+  //   // console.log(data);
+  //   if (data.status == "success") {
+  //     // setData(data);
+  //     queryClient.invalidateQueries(["cart"]);
+  //     setCounter(data?.length);
+  //     toast.error("Product deleted successfully");
+  //   }
+  // }
   async function deleteCartItem(id) {
-    let data = await reomveCartItem(id);
-    // console.log(data);
-    if (data.status == "success") {
-      setData(data);
-      setCounter(data.length);
-      toast.error("Product deleted successfully");
-    }
+  let data = await reomveCartItem(id);
+
+  if (data.status === "success") {
+    queryClient.invalidateQueries(["cart"]);
+
+    setInCart((prev) => prev.filter((productId) => productId !== id));
+
+    setCounter(data?.length);
+    toast.error("Product deleted successfully");
   }
+}
 
   // function to Update item from cart
 
@@ -48,8 +71,9 @@ export default function Cart() {
     let data = await UpdateQuantity(id, operation);
     // console.log(data);
     if (data.status == "success") {
-      setData(data);
-      setCounter(data.length);
+      queryClient.invalidateQueries(["cart"]);
+      // setData(data);
+      setCounter(data?.length);
       toast.success("Product Updated successfully");
     }
   }
@@ -60,31 +84,27 @@ export default function Cart() {
     let data = await deleteCart();
     // console.log(data);
     if (data.status == "success") {
-      setData(null);
+      // setData(null);
+      queryClient.invalidateQueries(["cart"]);
       setCounter(0);
+      setInCart([])
       toast.error("Cart Deleted successfully");
     }
   }
 
   // call get cart item function
   useEffect(() => {
-    (async () => {
-      let data = await getCart();
-      // console.log(data.cartItems);
-      if (data?.status == "success") {
-        setCounter(data.length);
-        setData(data);
-        console.log(data?.length);
-      }
-
-      // if (data.status == 'success') {
-      //   setCartItems(data)
-      setLoading(false);
-      // }
-    })();
-  }, []);
-  if (Loading) return <Loader />;
-  if (data == []) return <EmptyCart />;
+    console.log(data);
+  
+  }, [data]);
+  if (isLoading) return <Loader />;
+  if (!data?.cartItems?.length) {
+  return <EmptyCart />;
+}
+//   if (!data?.cartItems || data?.cartItems?.length === 0) {
+//   return <EmptyCart />;
+// }
+  // if (data == []) return <EmptyCart />;
   // if(data.numOfCartItems==0)return <EmptyCart/>
 
   return (

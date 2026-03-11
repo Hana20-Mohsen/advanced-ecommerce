@@ -1,11 +1,7 @@
-
 import Cart from "../../../DB/models/Cart.model.js";
-import jwt from 'jsonwebtoken';
-
-const resetCart = async (req, res, next) => {
-    try {
+import { asyncHandler } from "../../../utilities/error/error.js";
+const resetCart =asyncHandler( async (req, res, next) => {
         const userId = req.user._id;
-
         const cart = await Cart.findOneAndUpdate(
             { user: userId },
             { items: [] },
@@ -25,13 +21,6 @@ const resetCart = async (req, res, next) => {
             message: 'Cart cleared successfully',
             totalPrice: 0
         });
-
-    } catch (error) {
-        return res.status(500).json({
-            message: 'Server error',
-            error: error.message
-        });
-    }
-}
+})
 
 export default resetCart;

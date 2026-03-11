@@ -3,6 +3,7 @@
 
 import jwt from "jsonwebtoken"
 import User from "../DB/models/User.model.js"
+import { verifyToken } from "../utilities/security/token.security.js";
 
 
 export const userRoles={
@@ -30,12 +31,10 @@ export const authentication = ()=>{
                 default:
                     break;
             }
-            const decoded = jwt.verify(token, signature)
+            const decoded = verifyToken({token:token , signature:signature})
             if (!decoded?.id) {
                 return res.status(400).json({ message: "In-Valid token payload" })
             }
-            
-            
             const user = await User.findById(decoded.id);
             if (!user) {
                 return res.status(404).json({ message: "not register account" })

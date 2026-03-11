@@ -1,57 +1,105 @@
-import React, { useState, useEffect } from 'react';
-import styles from './Signin.module.css';
-import logoImg from '../assets/img/ElecLogo.png';
-import { useFormik } from 'formik';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
-
+import React, { useState, useEffect } from "react";
+import styles from "./Signin.module.css";
+import logoImg from "../assets/img/ElecLogo.png";
+import { useFormik } from "formik";
+import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 export default function Signin() {
   const [isChecked, setIsChecked] = useState(false);
-  const [Errmsg, setErrmsg] = useState('');
+  const [Errmsg, setErrmsg] = useState("");
   const [loading, setLoading] = useState(true);
   const [formErrors, setFormErrors] = useState({});
+  const location = useLocation()
   const navigate = useNavigate();
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
 
-  // Clear form errors after 5 seconds
+
   useEffect(() => {
+    if (location.state?.message) {
+      console.log('message');
+
+      setTimeout(() => {
+        toast.warning(
+          location.state.message,
+          {
+            toastId: "email-confirm-toast",
+            autoClose: 10000,
+          }
+        );
+        navigate(location.pathname, { replace: true })
+      }, 500);
+    }
     if (Object.keys(formErrors).length > 0) {
       const timer = setTimeout(() => {
         setFormErrors({});
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [formErrors]);
-
-  // Clear API error message after 5 seconds
-  useEffect(() => {
     if (Errmsg) {
       const timer = setTimeout(() => {
-        setErrmsg('');
+        setErrmsg("");
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [Errmsg]);
+
+  }, [location, navigate, formErrors, Errmsg])
+
+  // Clear form errors after 5 seconds
+  // useEffect(() => {
+  //   if (Object.keys(formErrors).length > 0) {
+  //     const timer = setTimeout(() => {
+  //       setFormErrors({});
+  //     }, 5000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [formErrors]);
+
+  // Clear API error message after 5 seconds
+  // useEffect(() => {
+  //   if (Errmsg) {
+  //     const timer = setTimeout(() => {
+  //       setErrmsg("");
+  //     }, 5000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [Errmsg]);
 
   async function sendDataToApi(values) {
     try {
       setLoading(false);
-      const { data } = await axios.post('http://localhost:8000/api/v1/user/login', values);
+      const { data } = await axios.post(
+        "http://localhost:8000/api/v1/user/login",
+        values
+      );
       console.log(data);
-      
-      
+
       if (data && data.token) {
-        Cookies.set('token', data.token, { expires: 7 });
+        Cookies.set("test", "hello");
+        console.log(Cookies.get("test"));
+        Cookies.set("token", data?.token, {
+          expires: 7,
+          path: "/",
+          secure: false
+
+        });
+        let token = Cookies.get('token')
+        console.log(token);
+
         // Force a full page reload to ensure all application state is reset
-        window.location.href = '/Home';
+        // window.location.href = "/home";
+        navigate("/home");
+
       }
     } catch (err) {
-      setErrmsg(err.response?.data?.message || 'Login failed. Please try again.');
-      console.error('Login error:', err);
+      setErrmsg(
+        err.response?.data?.message || "Login failed. Please try again."
+      );
+      console.error("Login error:", err);
     } finally {
       setLoading(true);
     }
@@ -59,32 +107,33 @@ export default function Signin() {
 
   function validate(values) {
     const errors = {};
-    
+
     if (!values.email) {
-      errors.email = 'Email is required';
+      errors.email = "Email is required";
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-      errors.email = 'Invalid email address';
+      errors.email = "Invalid email address";
     }
-    
+
     if (!values.password) {
-      errors.password = 'Password is required';
+      errors.password = "Password is required";
     } else if (!/^[A-Z][a-zA-Z0-9]{6,}$/.test(values.password)) {
-      errors.password = 'Password must start with uppercase and be at least 7 characters';
+      errors.password =
+        "Password must start with uppercase and be at least 7 characters";
     }
-    
+
     setFormErrors(errors);
     return errors;
   }
 
   const login = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
     validate,
     onSubmit: (values) => {
       sendDataToApi(values);
-    }
+    },
   });
 
   return (
@@ -93,64 +142,66 @@ export default function Signin() {
         <div className="row align-items-center py-5 mt-5">
           {/* Logo Section */}
           <div className="col-md-6 text-center text-white mb-5">
-            <img className='w-25 me-md-5' src={logoImg} alt="ElectroniXpress" />
-            <h2 className='mt-3 me-4'>Clothes X Clothes</h2>
+            <img className="w-25 me-md-5" src={logoImg} alt="ElectroniXpress" />
+            <h2 className="mt-3 me-4">Clothes X Clothes</h2>
             <span>helps you find all electronics you need</span>
           </div>
-          
+
           {/* Login Form */}
-          <div className={`${styles.MyForm} col-md-6 bg-black text-light p-4 mt-s-5`}>
-            <h2 className='fw-light'>Login Now</h2>
-            
-            <form onSubmit={login.handleSubmit} className='my-4 text-center'>
+          <div
+            className={`${styles.MyForm} col-md-6 bg-black text-light p-4 mt-s-5`}
+          >
+            <h2 className="fw-light">Login Now</h2>
+
+            <form onSubmit={login.handleSubmit} className="my-4 text-center">
               {/* Email Input */}
               <input
                 onBlur={login.handleBlur}
                 value={login.values.email}
                 onChange={login.handleChange}
-                className={`${styles.MyInput} form-control Gray-Color rounded-5 ${formErrors.email ? 'is-invalid' : ''}`}
+                className={`${styles.MyInput
+                  } form-control Gray-Color rounded-5 ${formErrors.email ? "is-invalid" : ""
+                  }`}
                 type="text"
-                name='email'
-                id='Email'
-                placeholder='Email*'
+                name="email"
+                id="Email"
+                placeholder="Email*"
               />
               {formErrors.email && login.touched.email && (
-                <div className="alert alert-danger">
-                  {formErrors.email}
-                </div>
+                <div className="alert alert-danger">{formErrors.email}</div>
               )}
-              
+
               {/* Password Input */}
               <input
                 onBlur={login.handleBlur}
                 value={login.values.password}
                 onChange={login.handleChange}
-                className={`${styles.MyInput} form-control Gray-Color rounded-5 ${formErrors.password ? 'is-invalid' : ''}`}
+                className={`${styles.MyInput
+                  } form-control Gray-Color rounded-5 ${formErrors.password ? "is-invalid" : ""
+                  }`}
                 type="password"
-                name='password'
-                id='Password'
-                placeholder='Password*'
+                name="password"
+                id="Password"
+                placeholder="Password*"
               />
               {formErrors.password && login.touched.password && (
-                <div className="alert alert-danger">
-                  {formErrors.password}
-                </div>
+                <div className="alert alert-danger">{formErrors.password}</div>
               )}
-              
+
               {/* Error Message */}
-              {Errmsg && (
-                <div className="alert alert-danger">
-                  {Errmsg}
-                </div>
-              )}
-              
+              {Errmsg && <div className="alert alert-danger">{Errmsg}</div>}
+
               {/* Submit Button */}
               <button
                 disabled={!(login.dirty && login.isValid) || !loading}
-                type='submit'
-                className='btn bg-main text-secondary mt-3 form-control rounded-5'
+                type="submit"
+                className="btn bg-main text-secondary mt-3 form-control rounded-5"
               >
-                {loading ? 'Sign In' : <i className='fa fa-spinner fa-spin main-color'></i>}
+                {loading ? (
+                  "Sign In"
+                ) : (
+                  <i className="fa fa-spinner fa-spin main-color"></i>
+                )}
               </button>
             </form>
           </div>
@@ -159,8 +210,6 @@ export default function Signin() {
     </div>
   );
 }
-
-
 
 // import React, { useState } from 'react'
 // import styles from './Signin.module.css'
@@ -171,10 +220,8 @@ export default function Signin() {
 // import { useNavigate } from 'react-router-dom';
 // import Cookies from 'js-cookie';
 
-
-
 // export default function Signin() {
-  
+
 // // start ckeckBox
 
 // const [isChecked, setIsChecked] = useState(false);
@@ -185,7 +232,7 @@ export default function Signin() {
 //   let [Errmsg , setErrmsg]=useState('');
 //   let [loading , setloading]=useState(true);
 //   //send data to api
-  
+
 //     function sendDataToApi(values){
 //       setloading(false);
 //    axios.post('http://localhost:8000/api/v1/user/login' , values).then(({data})=>{
@@ -204,8 +251,7 @@ export default function Signin() {
 //    })
 //   }
 
-
-// // validation function 
+// // validation function
 
 // function validate(values){
 //   const myError={}
@@ -219,7 +265,6 @@ export default function Signin() {
 
 // return myError
 // }
-
 
 //   //start formik
 //   let login = useFormik({
@@ -237,12 +282,10 @@ export default function Signin() {
 //     }
 //    })
 
-
 // // end formik
 
-
 //   return (
-    
+
 //     <div className={styles.main}>
 //         <div className="container pt-5 mt-5">
 //           <div className="row align-items-center py-5 mt-5" >
@@ -265,16 +308,15 @@ export default function Signin() {
 //                {login.errors.password && login.touched.password?  <div className="alert alert-danger">
 //                   {login.errors.password}
 //                 </div> :''}
-          
+
 //                 {Errmsg? <div className="alert alert-danger">
 //               {Errmsg}
 //             </div>:''}
-        
+
 //                 <button disabled={!(login.dirty&&login.isValid)} type='submit' className='btn bg-main text-secondary mt-3 form-control rounded-5'>
 //                   {loading? 'SignIn': <i className='fa fa-spinner fa-spin main-color'></i>}
 //                 </button>
 
-              
 //               </form>
 //                {/*//////////////////////////////////////////////////////////// end form  /////////////////////////////////// */}
 //             </div>
@@ -283,4 +325,3 @@ export default function Signin() {
 //     </div>
 //   )
 // }
-

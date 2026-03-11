@@ -1,16 +1,18 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useQuery , useQueryClient } from 'react-query';
 import { storeContext } from '../context/storeContext';
 import { orderContext } from '../context/OrderContext.js';
 import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function PlaceOrder() {
+  const queryClient = useQueryClient();
   let [subPrice , setSubtotal]=useState(0)
    let [shipping , setShipping]=useState(0)
    let [tax , setTax]=useState(0)
     let [total , setTotal]=useState(0)
  
-  const { getCart, deleteCart, cartItems, setCartItems } = useContext(storeContext);
+  const { getCart, deleteCart, cartItems, setCartItems  , setCounter , setInCart} = useContext(storeContext);
   const { createOrder, getOrderById, orders, setOrders, loading, setLoading, error, setError, getOrderPrices } = useContext(orderContext)
   const navigate = useNavigate();
   const [shippingAddress, setshippingAddress] = useState({
@@ -72,6 +74,12 @@ export default function PlaceOrder() {
         console.log('im succccessssssssss');
         
         await deleteCart();
+        setCartItems([])
+        // new line
+        queryClient.invalidateQueries(["cart"]);
+        // queryClient.invalidateQueries({ queryKey: ["cart"] });
+        setCounter(0)
+        setInCart([])
         toast.success('Order placed successfully!');
         navigate(`/order/${data.createdOrder._id}`);
       }

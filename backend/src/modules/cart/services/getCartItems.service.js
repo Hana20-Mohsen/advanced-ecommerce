@@ -1,41 +1,26 @@
-
 import Cart from "../../../DB/models/Cart.model.js";
-import jwt from 'jsonwebtoken';
+import { asyncHandler } from "../../../utilities/error/error.js";
 
-const getCartItems = async (req, res, next) => {
-    try {
+const getCartItems =asyncHandler( async (req, res, next) => {
+    console.log('--------------------------------------- get cart items ------------------------------');
+    
         const userId = req.user._id;
-        console.log(userId);
-        
         const cart = await Cart.findOne({ user: userId })
             .populate('items.product', 'name price images countInStock');
         console.log("cart : ",cart);
         
         if (!cart || cart.items.length === 0) {
-            return res.status(404).json({
-                status: "fail",
-                message:'cart have no items'
-            });
+            return next(new Error('cart have no items' , {cause:404}))
         }
 
         const totalPrice = cart.items.reduce((acc, item) => 
             acc + (item.quantity * item.product.price), 0);
-
-        console.log("totalPrice : "+totalPrice);
-        
         return res.status(200).json({
             status: 'success',
             cartItems: cart.items,
             length: cart.items.length,
             totalPrice
         });
-
-    } catch (error) {
-        return res.status(500).json({
-            message: 'Server error',
-            error: error.message
-        });
-    }
 }
-
+)
 export default getCartItems;

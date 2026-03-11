@@ -31,11 +31,11 @@ const storage = multer.diskStorage({
 router.post('/add', upload.array('images', 5) , addProduct);
 router.get('/all' , getAllProducts)
 router.post('/getByIds', getByIds)
-router.get('/bestSeller' , authentication() ,bestSeller)
+router.get('/bestSeller',bestSeller)
 router.get('/:id' , GetByProductId)
 router.post('/multi' , addMultiple)
 router.delete('/:id' , deleteProduct)
-router.put('/update/:productId' , authentication() , updateProduct)
+router.put('/update/:productId'  , updateProduct)
 
 export default router;
 

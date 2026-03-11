@@ -32,6 +32,7 @@ import HeadPhones from './categories/headphone/HeadPhones'
 import OrderList from './order/OrderList.js'
 import OrderDetails from './order/OrderDetails.js'
 import PlaceOrder from './order/PlaceOrder.js'
+import EmailConfirm from './signup/confirmEmail.jsx'
 
 export default function App() {
   const routes = createBrowserRouter([
@@ -40,6 +41,7 @@ export default function App() {
       { index:true,element:<Signin/>},
       {path:'signin',element:<Signin/>},
       {path:'signup',element:<SignUp/>},
+      {path:'confirm-email/:emailToken' , element:<EmailConfirm/>}
      
     ]},
     { path:'/', element:<MainLayOut/>,errorElement:<NotFoundPage/>, children:[
@@ -61,7 +63,7 @@ export default function App() {
       {path:'changepassword', element : <ProtectedRoutes><ChangePassword/>  </ProtectedRoutes>},
       {path:'placeorder' , element:<ProtectedRoutes><PlaceOrder/>  </ProtectedRoutes>},
       {path:'order/:orderId' , element:<ProtectedRoutes><OrderDetails/>  </ProtectedRoutes>},
-      {path:'orders' , element:<ProtectedRoutes><OrderList/>  </ProtectedRoutes>}
+      {path:'orders' , element:<ProtectedRoutes><OrderList/>  </ProtectedRoutes>},
 
     ]},
     // {path:'/', element:<CategoryLayOut/>,errorElement:<NotFoundPage/>,children:[

@@ -82,7 +82,7 @@ export default function Home() {
       }
       
       // Clean up the URL (optional)
-      window.history.replaceState({}, document.title, '/Home');
+      window.history.replaceState({}, document.title, '/home');
    
     // هنا بتحطي الفانكشن اللي تشتغل مرة واحدة بس
     getPrevValues();

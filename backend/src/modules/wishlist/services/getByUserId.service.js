@@ -1,51 +1,42 @@
 
 import Wishlist from "../../../DB/models/wishlist.model.js";
-import jwt from 'jsonwebtoken';
+import { asyncHandler } from "../../../utilities/error/error.js";
 
-const findByUserId = async (req, res, next) => {
-    try {
-        const { authorization } = req.headers;
-        const [Bearer, token] = authorization.split(" ") || [];
+const findByUserId =asyncHandler( async (req, res, next) => {
+        // const { authorization } = req.headers;
+        // const [Bearer, token] = authorization.split(" ") || [];
         
-        if (!token || !Bearer) {
-            return res.status(400).json({ message: "Invalid token components" });
-        }
+        // if (!token || !Bearer) {
+        //     return res.status(400).json({ message: "Invalid token components" });
+        // }
 
-        let signature = undefined;
-        switch (Bearer) {
-            case "admin":
-                signature = process.env.TOKEN_SIGNATURE_ADMIN;
-                break;
-            case "Bearer":
-                signature = process.env.TOKEN_SIGNATURE;
-                break;
-            default:
-                break;
-        }
+        // let signature = undefined;
+        // switch (Bearer) {
+        //     case "admin":
+        //         signature = process.env.TOKEN_SIGNATURE_ADMIN;
+        //         break;
+        //     case "Bearer":
+        //         signature = process.env.TOKEN_SIGNATURE;
+        //         break;
+        //     default:
+        //         break;
+        // }
         
-        const decoded = jwt.decode(token, signature);
-        const userId = decoded.id;
+        // const decoded = jwt.decode(token, signature);
+        // const userId = decoded.id;
         
         // Find wishlist and populate products
-        const wishlist = await Wishlist.findOne({ user: userId }).populate('products');
-        console.log(wishlist);
-        
+        const wishlist = await Wishlist.findOne({ user: req.user._id }).populate('products');
+
         if (!wishlist) {
-            return res.status(404).json({
-                status: 'fail',
-                message:'wishList is empty'
-            });
+            return next(new Error('wishList is empty' , {cause:404}))
         }
 
         return res.status(200).json({
             status: 'success',
             wishlistItems: wishlist.products,
             length: wishlist.products.length
-        });
-
-    } catch (error) {
-        return res.status(500).json({ message: "Server error", error: error.message });
-    }
-}
+        })
+})
 
 export default findByUserId;

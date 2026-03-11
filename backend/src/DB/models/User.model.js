@@ -12,6 +12,10 @@ const userSchema= new Schema(
             lowercase: true,
             unique: true,
           },
+          confirmEmail:{
+            type:Boolean,
+            default:false
+          },
           password: {
             type: String,
             required: true,

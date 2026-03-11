@@ -19,7 +19,7 @@ const router= Router();
 router.post('/add' ,authentication(), createOrder)
 router.get('/getById' , authentication() , getOrderById)  
 router.get('/getPrices' , authentication(),getOrderPrices)
-router.get('/getAll' , authentication() , getAllOrders)
+router.get('/getAll' , getAllOrders)
 router.get('/:id' , authentication(),getByOrderId)
 router.post('/payment/process', authentication(), processPayment);
 router.post('/payment/paypal/create/:id', authentication(), createPayPalPayment);

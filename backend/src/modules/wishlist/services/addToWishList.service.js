@@ -1,43 +1,42 @@
-
 import Wishlist from "../../../DB/models/wishlist.model.js";
 import Product from "../../../DB/models/Product.model.js";
-import jwt from 'jsonwebtoken';
+import { asyncHandler } from "../../../utilities/error/error.js";
 
-const addToWishlist = async (req, res, next) => {
-    try {
+
+const addToWishlist =asyncHandler( async (req, res, next) => {
         const productId = req.params.id;
-        const { authorization } = req.headers;
-        const [Bearer, token] = authorization.split(" ") || [];
+        // const { authorization } = req.headers;
+        // const [Bearer, token] = authorization.split(" ") || [];
 
-        const productToBeAdded= await Product.findById(productId)
-        if(!productToBeAdded){
-            return res.status(404).json({status:'fail' , message:'product not found'})
-        }
+        // const productToBeAdded= await Product.findById(productId)
+        // if(!productToBeAdded){
+        //     return res.status(404).json({status:'fail' , message:'product not found'})
+        // }
         
-        if (!token || !Bearer) {
-            return res.status(400).json({ message: "Invalid token components" });
-        }
+        // if (!token || !Bearer) {
+        //     return res.status(400).json({ message: "Invalid token components" });
+        // }
 
-        let signature = undefined;
-        switch (Bearer) {
-            case "admin":
-                signature = process.env.TOKEN_SIGNATURE_ADMIN;
-                break;
-            case "Bearer":
-                signature = process.env.TOKEN_SIGNATURE;
-                break;
-            default:
-                break;
-        }
+        // let signature = undefined;
+        // switch (Bearer) {
+        //     case "admin":
+        //         signature = process.env.TOKEN_SIGNATURE_ADMIN;
+        //         break;
+        //     case "Bearer":
+        //         signature = process.env.TOKEN_SIGNATURE;
+        //         break;
+        //     default:
+        //         break;
+        // }
         
-        const decoded = jwt.decode(token, signature);
-        const userId = decoded.id;
+        // const decoded = verifyToken({token:token , signature:signature})
+        // const userId = decoded.id;
 
         // Find or create wishlist for user
-        let wishlist = await Wishlist.findOne({ user: userId });
+        let wishlist = await Wishlist.findOne({ user: req.user._id });
 
         if (!wishlist) {
-            wishlist = await Wishlist.create({ user: userId, products: [] });
+            wishlist = await Wishlist.create({ user: req.user._id, products: [] });
         }
 
         // Check if product already exists in wishlist
@@ -67,11 +66,7 @@ const addToWishlist = async (req, res, next) => {
             message: 'Product added to wishlist',
             wishlist: wishlist.products,
             length: wishlist.products.length
-        });
-
-    } catch (error) {
-        return res.status(500).json({ message: "Server error", error: error.message });
-    }
-}
+        })
+})
 
 export default addToWishlist;

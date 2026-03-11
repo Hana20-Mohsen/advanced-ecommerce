@@ -1,18 +1,13 @@
-
 import Cart from "../../../DB/models/Cart.model.js";
-import jwt from 'jsonwebtoken';
+import { asyncHandler } from "../../../utilities/error/error.js";
 
-const deleteFromCart = async (req, res, next) => {
-    try {
+const deleteFromCart = asyncHandler(async (req, res, next) => {
         const productId = req.params.id;
         const userId =req.user._id;
 
         const cart = await Cart.findOne({ user: userId });
         if (!cart) {
-            return res.status(404).json({
-                status: 'fail',
-                message: 'Cart not found'
-            });
+            return next(new Error('Cart not found' , {cause:404}))
         }
 
         const initialLength = cart.items.length;
@@ -21,10 +16,7 @@ const deleteFromCart = async (req, res, next) => {
         );
 
         if (cart.items.length === initialLength) {
-            return res.status(404).json({
-                status: 'fail',
-                message: 'Product not found in cart'
-            });
+            return next(new Error('Product not found in cart' , {cause:404}))
         }
 
         await cart.save();
@@ -40,13 +32,6 @@ const deleteFromCart = async (req, res, next) => {
             length: updatedCart.items.length,
             totalPrice
         });
-
-    } catch (error) {
-        return res.status(500).json({
-            message: 'Server error',
-            error: error.message
-        });
-    }
-}
+})
 
 export default deleteFromCart;

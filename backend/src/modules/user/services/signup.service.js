@@ -1,29 +1,30 @@
 import User from "../../../DB/models/User.model.js";
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken'
+import { emailEvent } from "../../../utilities/events/email.event.js";
+import { asyncHandler } from "../../../utilities/error/error.js";
+import {generateHash} from "../../../utilities/security/hash.security.js";
+import { generateEncryption } from "../../../utilities/security/encryption.security.js";
 
- const signup= async(req,res,next)=>{
-    try {
+ const signup= asyncHandler(async(req,res,next)=>{
         const {name , email , password ,confirmationPassword , phone} = req.body;
+        console.log(req.body);
+        
         if(password !== confirmationPassword){
-            return res.status(400).json({mssage:"pssword mismatch caonfirmation Password!!"})
+            return next(new Error('pssword mismatch caonfirmation Password!!' , {cause:400}))
         }
-
-        const checkUser= await User.findOne({email});
-        if(checkUser){
-            return res.status(409).json({message:"email Already exists!!"})
+        if(await User.findOne({email})){
+            return next(new Error('email Already exists!!' , {cause:409}))
         }
        
-        const hashPassword=bcrypt.hashSync(password , parseInt(process.env.SALT));
-
-        const user=await User.create({name , email , password:hashPassword , phone});
+        const hashPassword=generateHash({plaintext:password})
+        const encryptedPhone=generateEncryption({plainText:phone})
+        const user=await User.create({name , email , password:hashPassword , phone:encryptedPhone});
+        emailEvent.emit('sendConfirmEmail' , {email})
+       
         return res.status(201).json({
             message:'Done',
             user
         })
-    } catch (error) {
-        return res.status(500).json({message:'server error' ,error , msg:error.message});
-    }
-}
+    
+})
 
 export default signup;
