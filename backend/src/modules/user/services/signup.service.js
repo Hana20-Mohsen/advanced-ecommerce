@@ -1,0 +1,30 @@
+import User from "../../../DB/models/User.model.js";
+import { emailEvent } from "../../../utilities/events/email.event.js";
+import { asyncHandler } from "../../../utilities/error/error.js";
+import {generateHash} from "../../../utilities/security/hash.security.js";
+import { generateEncryption } from "../../../utilities/security/encryption.security.js";
+
+ const signup= asyncHandler(async(req,res,next)=>{
+        const {name , email , password ,confirmationPassword , phone} = req.body;
+        console.log(req.body);
+        
+        if(password !== confirmationPassword){
+            return next(new Error('pssword mismatch caonfirmation Password!!' , {cause:400}))
+        }
+        if(await User.findOne({email})){
+            return next(new Error('email Already exists!!' , {cause:409}))
+        }
+       
+        const hashPassword=generateHash({plaintext:password})
+        const encryptedPhone=generateEncryption({plainText:phone})
+        const user=await User.create({name , email , password:hashPassword , phone:encryptedPhone});
+        emailEvent.emit('sendConfirmEmail' , {email})
+       
+        return res.status(201).json({
+            message:'Done',
+            user
+        })
+    
+})
+
+export default signup;

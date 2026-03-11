@@ -1,0 +1,22 @@
+
+
+.Slider_item_bg{
+    background-image: url(../assets/images/slider-item-bg-removebg-preview.png);
+    background-size:cover;
+    background-repeat: no-repeat;
+    background-position: center
+}
+
+/* Remove all hover effects */
+.collection {
+    text-decoration: none !important;
+    color: black;
+    background-color: #2ff3e0 !important;
+
+  }
+
+  /* .noHover:hover {
+    text-decoration: none;
+    color: black;
+    background-color: #2ff3e0;
+  } */
