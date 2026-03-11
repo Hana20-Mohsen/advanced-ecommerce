@@ -21,7 +21,7 @@ export default function Laptop() {
   // Check if it's already a full URL (for seeded data maybe)
   if (imagePath.startsWith('http')) return imagePath;
   // Otherwise construct the proper URL
-  return `${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/uploads/${imagePath}`;
+  return `${process.env.REACT_APP_BACKEND_URL}/uploads/${imagePath}`;
 };
       // const [isLoved, setIsLoved] = useState([]);
       // const [inCart, setInCart] = useState([]);
@@ -49,7 +49,7 @@ export default function Laptop() {
 
 
     function getProducts(){
-        return axios.get('http://localhost:8000/api/v1/category/name?name=Accessories')
+        return axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/category/name?name=Accessories`)
       }
     
     let {data , isError , isLoading , isFetching}=  useQuery('getProducts' , getProducts , {

@@ -8,7 +8,7 @@ export  let ProfileContext=createContext(0)
 // function get Categories
 
 async function getProfileData(){
-    return axios.get('http://localhost:8000/api/v1/user/profile',{
+    return axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/user/profile`,{
           headers:{
             authorization:`Bearer ${Cookies.get('token')}`,
           }

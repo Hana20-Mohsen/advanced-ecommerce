@@ -19,7 +19,7 @@ export default function WishList() {
   // Check if it's already a full URL (for seeded data maybe)
   if (imagePath.startsWith('http')) return imagePath;
   // Otherwise construct the proper URL
-  return `${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/uploads/${imagePath}`;
+  return `${process.env.REACT_APP_BACKEND_URL}/uploads/${imagePath}`;
 };
 
   // function to delete item from wish list

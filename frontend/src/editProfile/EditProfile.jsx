@@ -25,7 +25,7 @@ export default function EditProfile() {
     try {
       setLoading(false);
       const token = Cookies.get('token');
-      const { data } = await axios.put('http://localhost:8000/api/v1/user/update', values, {
+      const { data } = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/v1/user/update`, values, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -159,7 +159,7 @@ export default function EditProfile() {
 //     try {
 //       setLoading(false);
 //       const token = Cookies.get('token');
-//       const { data } = await axios.put('http://localhost:8000/api/v1/user/update', values, {
+//       const { data } = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/v1/user/update', values, {
 //         headers: {
 //           Authorization: `Bearer ${token}`,
 //         },

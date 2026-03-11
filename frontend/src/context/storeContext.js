@@ -6,7 +6,7 @@ export  let storeContext=createContext(0)
 const token = Cookies.get('token');
 // function add to cart
 async function addToCart(productId , quantity=1){
-   return axios.post(`http://localhost:8000/api/v1/cart/add/${productId}` ,{quantity},{
+   return axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/cart/add/${productId}` ,{quantity},{
     headers:{
       authorization:`Bearer ${Cookies.get('token')}`
     }
@@ -20,7 +20,7 @@ async function addToCart(productId , quantity=1){
   let token=Cookies.get('token');
   console.log(token);
   
-  let data =await axios.get('http://localhost:8000/api/v1/cart/all',{
+  let data =await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/cart/all`,{
    headers:{
      authorization:`Bearer ${Cookies.get('token')}`
    }
@@ -34,7 +34,7 @@ async function addToCart(productId , quantity=1){
 
 // function Remove from cart
  async function reomveCartItem(productId){
-  return axios.delete(`http://localhost:8000/api/v1/cart/delete/${productId}` ,{
+  return axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/v1/cart/delete/${productId}` ,{
    headers:{
      authorization:`Bearer ${Cookies.get('token')}`
    }
@@ -45,7 +45,7 @@ async function addToCart(productId , quantity=1){
 
 // function Update Quantity
 async function UpdateQuantity(productId , operation){
-  return axios.put(`http://localhost:8000/api/v1/cart/update/${productId}`,{operation} ,{
+  return axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/v1/cart/update/${productId}`,{operation} ,{
    headers:{
      authorization:`Bearer ${Cookies.get('token')}`
    }
@@ -56,7 +56,7 @@ async function UpdateQuantity(productId , operation){
 
 // function Delete cart
 async function deleteCart(){
-  return axios.delete('http://localhost:8000/api/v1/cart/reset',{
+  return axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/v1/cart/reset`,{
    headers:{
      authorization:`Bearer ${Cookies.get('token')}`
    }

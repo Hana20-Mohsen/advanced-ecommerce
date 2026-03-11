@@ -10,7 +10,7 @@ import Camera from './camera/Camera.jsx'
 export default function Categories() {
 
     function getCategoriess(){
-      return axios.get('http://localhost:8000/api/v1/category/all')
+      return axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/category/all`)
     }
 
   let {data , isError , isLoading , isFetching}=  useQuery('getCategoriess' , getCategoriess , {

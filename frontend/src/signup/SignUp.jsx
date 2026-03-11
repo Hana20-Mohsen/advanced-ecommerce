@@ -21,7 +21,7 @@ let [loading , setloading]=useState(true);
     console.log(values);
     
     setloading(false);
- axios.post('http://localhost:8000/api/v1/user/register' , values)
+ axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/user/register` , values)
  .then(({data})=>{
   console.log(data)
   setloading(true);

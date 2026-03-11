@@ -11,7 +11,7 @@ const EmailConfirm=()=>{
     
     useEffect(()=>{
         const confirmEmail= async()=>{
-              await axios.post(`http://localhost:8000/api/v1/user/confirm-email` , {} , {
+              await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/user/confirm-email` , {} , {
                 headers:{
                     Authorization:emailToken
                 }

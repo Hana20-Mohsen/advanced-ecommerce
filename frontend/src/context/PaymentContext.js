@@ -31,7 +31,7 @@ export const PaymentProvider = ({ children }) => {
   try {
     Cookies.set('orderId' ,id)
     const response = await axios.post(
-      `http://localhost:8000/api/v1/order/payment/paypal/create/${id}`,
+      `${process.env.REACT_APP_BACKEND_URL}/api/v1/order/payment/paypal/create/${id}`,
       {}, // empty body since we're using URL params
       {
         headers: {
@@ -64,7 +64,7 @@ async function verifyPayPalPayment(orderId) {
   try {
     let paymentId=Cookies.get('paymentId')
     const response = await axios.get(
-      `http://localhost:8000/api/v1/order/payment/paypal/verify/${orderId}`,
+      `${process.env.REACT_APP_BACKEND_URL}/api/v1/order/payment/paypal/verify/${orderId}`,
       {
         params: { paymentId },
         headers: {

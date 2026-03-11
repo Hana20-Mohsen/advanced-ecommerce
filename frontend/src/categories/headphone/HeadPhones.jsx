@@ -22,7 +22,7 @@ export default function HeadPhones() {
   // Check if it's already a full URL (for seeded data maybe)
   if (imagePath.startsWith('http')) return imagePath;
   // Otherwise construct the proper URL
-  return `${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/uploads/${imagePath}`;
+  return `${process.env.REACT_APP_BACKEND_URL}/uploads/${imagePath}`;
 };
 
       // const [isLoved, setIsLoved] = useState([]);
@@ -50,7 +50,7 @@ export default function HeadPhones() {
 
 
     function getProducts(){
-        return axios.get('http://localhost:8000/api/v1/category/name?name=Clothes')
+        return axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/category/name?name=Clothes`)
       }
     
     let {data , isError , isLoading , isFetching}=  useQuery('getProducts' , getProducts , {

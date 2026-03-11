@@ -8,7 +8,7 @@ export  let orderContext=createContext(0)
 
 // function add product to Wish list
    async function  createOrder(orderData){
-      return axios.post(`http://localhost:8000/api/v1/order/add`,orderData,{
+      return axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/order/add`,orderData,{
             headers:{
                 authorization:`Bearer ${Cookies.get('token')}`,
             }
@@ -19,7 +19,7 @@ export  let orderContext=createContext(0)
     // function get product from Wish list
 
    async function getOrderById(){
-        return axios.get('http://localhost:8000/api/v1/order/getById',{
+        return axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/order/getById`,{
               headers:{
                 authorization:`Bearer ${Cookies.get('token')}`,
               }
@@ -27,14 +27,14 @@ export  let orderContext=createContext(0)
       }
 
       async function getOrderPrices() {
-         return axios.get(`http://localhost:8000/api/v1/order/getPrices`,{
+         return axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/order/getPrices`,{
               headers:{
                 authorization:`Bearer ${Cookies.get('token')}`,
               }
           }).then(({data})=>data).catch(err => err)
       }
          async function getOrder(orderId) {
-         return axios.get(`http://localhost:8000/api/v1/order/${orderId}`,{
+         return axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/order/${orderId}`,{
               headers:{
                 authorization:`Bearer ${Cookies.get('token')}`,
               }
@@ -42,7 +42,7 @@ export  let orderContext=createContext(0)
       }
 
       async function getMyOrders() {
-         return axios.get(`http://localhost:8000/api/v1/order/getById`,{
+         return axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/order/getById`,{
               headers:{
                 authorization:`Bearer ${Cookies.get('token')}`,
               }
@@ -53,7 +53,7 @@ export  let orderContext=createContext(0)
       
       async function updateOrder(updates , orderId = Cookies.get('orderId')) {
       //  let orderId= Cookies.get('orderId')
-         return axios.put(`http://localhost:8000/api/v1/order/update/${orderId}`,updates,{
+         return axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/v1/order/update/${orderId}`,updates,{
               headers:{
                 authorization:`Bearer ${Cookies.get('token')}`,
               }
@@ -62,7 +62,7 @@ export  let orderContext=createContext(0)
 
        async function deleteOrder(orderId) {
       //  let orderId= Cookies.get('orderId')
-         return axios.delete(`http://localhost:8000/api/v1/order/delete/${orderId}`,{
+         return axios.delete(`${process.env.REACT_APP_BACKEND_URL}/api/v1/order/delete/${orderId}`,{
           headers:{
                 authorization:`Bearer ${Cookies.get('token')}`,
               }

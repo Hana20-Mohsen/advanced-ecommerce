@@ -31,7 +31,7 @@ export default function ProductDetails() {
   // Check if it's already a full URL (for seeded data maybe)
   if (imagePath.startsWith('http')) return imagePath;
   // Otherwise construct the proper URL
-  return `${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/uploads/${imagePath}`;
+  return `${process.env.REACT_APP_BACKEND_URL}/uploads/${imagePath}`;
 };
 
          async function getPrevValues(){
@@ -55,7 +55,7 @@ export default function ProductDetails() {
 
     // Fetch product data
     async function getProduct() {
-        return await axios.get(`http://localhost:8000/api/v1/product/${x.id}`);
+        return await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/product/${x.id}`);
     }
 
     let { data, isError, isLoading, isFetching } = useQuery('getProduct', getProduct, {
@@ -65,7 +65,7 @@ export default function ProductDetails() {
 
     // Add review mutation
     const addReviewMutation = useMutation(
-        (reviewData) => axios.post(`http://localhost:8000/api/v1/review/add/${x.id}`, reviewData, {
+        (reviewData) => axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/review/add/${x.id}`, reviewData, {
             headers: {
                 Authorization: `Bearer ${Cookies.get('token')}`
             }

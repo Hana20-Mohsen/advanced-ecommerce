@@ -71,9 +71,10 @@ export default function Signin() {
 
   async function sendDataToApi(values) {
     try {
+      console.log("ENV URL:", process.env.REACT_APP_BACKEND_URL);
       setLoading(false);
       const { data } = await axios.post(
-        "http://localhost:8000/api/v1/user/login",
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/user/login`,
         values
       );
       console.log(data);
@@ -235,7 +236,7 @@ export default function Signin() {
 
 //     function sendDataToApi(values){
 //       setloading(false);
-//    axios.post('http://localhost:8000/api/v1/user/login' , values).then(({data})=>{
+//    axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/user/login` , values).then(({data})=>{
 //     console.log(data)
 //     setloading(true);
 //       //------------- if condition data.message=="success" -------------------

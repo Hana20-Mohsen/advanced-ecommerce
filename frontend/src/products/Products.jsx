@@ -10,7 +10,9 @@ export default function Products() {
     let { setCounter, getCart, setInCart, setCartItems } = useContext(storeContext);
     let {  getFromWishList, setIsLoved } = useContext(WishListContext);
  async function getProducts(){
-    return axios.get('http://localhost:8000/api/v1/product/all')
+    return axios.get(`${process.env.REACT_APP_BACKEND_URL
+      
+    }/api/v1/product/all`)
   }
 
  let {data , isError , isLoading , isFetching}=  useQuery('getProducts' , getProducts , {
