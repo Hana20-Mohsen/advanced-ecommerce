@@ -1,8 +1,10 @@
-
+import { getIO } from '../../../Socket/index.js';
 import Order from '../../../DB/models/order.model.js';
 import Cart from '../../../DB/models/Cart.model.js';
 import { asyncHandler } from '../../../utilities/error/error.js';
- const createOrder =asyncHandler( async (req, res) => {
+import { getSocketInstance } from '../../../Socket/socketManager.js';
+const createOrder =asyncHandler( async (req, res) => {
+   const io = getIO()
      const user=req.user;
      const {  shippingAddress, paymentMethod } = req.body;
     const cart= await Cart.findOne({user:user}).select('items _id').populate({
@@ -35,6 +37,8 @@ import { asyncHandler } from '../../../utilities/error/error.js';
       shippingPrice,
       totalPrice,
     });
+    io.to(req.user._id).emit("order-created",order)
+    
 
    return res.status(201).json({status:'success',createdOrder:order});
 })

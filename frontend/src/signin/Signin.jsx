@@ -6,6 +6,7 @@ import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import socket from "../socket/socket";
 export default function Signin() {
   const [isChecked, setIsChecked] = useState(false);
   const [Errmsg, setErrmsg] = useState("");
@@ -80,8 +81,7 @@ export default function Signin() {
       console.log(data);
 
       if (data && data.token) {
-        Cookies.set("test", "hello");
-        console.log(Cookies.get("test"));
+        socket.emit("join-user-room", data.id)
         Cookies.set("token", data?.token, {
           expires: 7,
           path: "/",

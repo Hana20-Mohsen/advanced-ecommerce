@@ -3,15 +3,12 @@ import { userRoles } from "../../../middleware/auth.middleware.js";
 import { asyncHandler } from "../../../utilities/error/error.js";
 import { compareHash } from "../../../utilities/security/hash.security.js";
 import { generateToken } from "../../../utilities/security/token.security.js";
-
+import { getIO } from '../../../Socket/index.js';
+import { getSocketInstance } from "../../../Socket/socketManager.js";
 const login = asyncHandler(async (req, res, next) => {
-
-    const { email, password } = req.body;
-    console.log(email, password);
-
+    const io = getSocketInstance()
+    const { email, password } = req.body
     const user = await User.findOne({ email })
-    console.log(user);
-
     if (!user) {
         return next(new Error('user not found', { cause: 404 }))
     }
@@ -22,11 +19,12 @@ const login = asyncHandler(async (req, res, next) => {
         return next(new Error('In-Valid login data!!', { cause: 400 }))
 
     }
+    io.emit("join-user-room" , user._id)
     const token = generateToken({
         payload: { id: user._id, isloggedIn: true }
         , signature: user.role == userRoles.admin ? process.env.TOKEN_SIGNATURE_ADMIN : process.env.TOKEN_SIGNATURE, options: { expiresIn: '11h' }
     });
-    console.log(token);
+ 
     // res.cookie("token", token, {
     //     httpOnly: true,      // JS cannot access it
     //     secure: false,       // true in production (HTTPS)

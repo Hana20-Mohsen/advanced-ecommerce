@@ -1,4 +1,6 @@
 import React from 'react'
+import socket from './socket/socket.js'
+import { useEffect } from 'react'
 import { createBrowserRouter , RouterProvider } from 'react-router-dom'
 import Home from './home/Home'
 import Products from './products/Products'
@@ -35,6 +37,13 @@ import PlaceOrder from './order/PlaceOrder.js'
 import EmailConfirm from './signup/confirmEmail.jsx'
 
 export default function App() {
+  useEffect(()=>{
+
+ socket.on("connect",()=>{
+  console.log("connected:",socket.id)
+ })
+
+},[])
   const routes = createBrowserRouter([
 
     { path:'/',element:<AuthLayOut/>,children:[
