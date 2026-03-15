@@ -26,7 +26,8 @@ const bootstrap=(app , express)=>{
         'http://localhost:3000',
         'http://localhost:3001',
         'http://localhost:3002',
-        'http://localhost:3003'
+        'http://localhost:3003',
+        `https://advanced-ecommerce-psi.vercel.app`
       ];
     //here i will use cors
     app.use(cors({
