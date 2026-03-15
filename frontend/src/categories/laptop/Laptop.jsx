@@ -112,7 +112,7 @@ export default function Laptop() {
   return (
     <>
 
- <CategoryNavbar/>
+ {/* <CategoryNavbar/> */}
  
       <div className='Dark-Color pt-5'>
      
@@ -120,7 +120,7 @@ export default function Laptop() {
      <Link to="/Home"> <i className="fa-solid fa-circle-arrow-left main-color fs-2 ms-4"></i></Link>
       <div className="row">
      {data?.data?.products.map(item=>{
-      return   <div key={item._id} className="col-lg-2 col-sm-4 h-10" >
+      return   <div key={item._id} className="col-lg-2 col-6 col-md-4 h-10" >
       <div className="product h-10 text-white p-2 cursor-pointer rounded-3 gray-border my-3">
         {/* start link to product details */}
         <Link className='un-underline' to={'/product-details/' + item._id}>

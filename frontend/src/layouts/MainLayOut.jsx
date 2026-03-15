@@ -1,11 +1,13 @@
 import React from 'react'
 import Navbar from '../Navbar/Navbar.jsx'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 
 export default function MainLayOut() {
+  const location = useLocation()
   return (
     <>
-      <Navbar/>
+      {/* <Navbar/> */}
+      {location.pathname !== "/category" && <Navbar />}
      <Outlet/>
     </>
   )

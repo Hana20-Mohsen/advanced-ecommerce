@@ -119,15 +119,15 @@ export default function Camera() {
   return (
     <>
 
- <CategoryNavbar/>
- 
+ {/* <CategoryNavbar/>
+  */}
       <div className='Dark-Color pt-5'>
      
-     <div className="container py-5">
-     <Link to="/Home"> <i className="fa-solid fa-circle-arrow-left main-color fs-2  position-fixed"></i></Link>
+     <div className="container py-5 mt-5">
+     <Link to="/Home"> <i className="fa-solid fa-circle-arrow-left main-color fs-1  position-fixed"></i></Link>
       <div className="row">
      {data?.data?.products.map(item=>{
-      return   <div key={item._id} className="col-lg-2 col-sm-4 h-10" >
+      return   <div key={item._id} className="col-lg-2 col-6 col-md-4 h-10 mt-4" >
       <div className="product h-10 text-white p-2 cursor-pointer rounded-3 gray-border my-3">
         {/* start link to product details */}
         <Link className='un-underline' to={'/product-details/' + item._id}>

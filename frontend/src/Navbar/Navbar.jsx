@@ -44,14 +44,14 @@ useEffect(()=>{
 
   return (
     <>
-     <nav className={` ${styles.bg} navbar navbar-expand-lg py-3 fixed-top `}>
+     <nav className={` ${styles.bg} navbar navbar-expand-lg navbar-dark py-3 fixed-top `}>
         <div className="container-fluid ">
           {/* <h3 className='me-5'>Clothes X Clothes</h3> */}
           <img className={`${styles.custom_width}`} src={logo} alt="ElectroniXpress" />
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon" />
+          <button className="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon " />
           </button>
-          <div className="collapse navbar-collapse text-center" id="navbarNav">
+          <div className="collapse navbar-collapse text-center " id="navbarNav">
             <ul className="navbar-nav me-auto" >
               <li>
                 <NavLink style={{ color: 'white' }} className="nav-link mt-1" to="/Home">Home</NavLink>

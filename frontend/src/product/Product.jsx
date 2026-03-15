@@ -108,7 +108,7 @@ export default function Product({ item }) {
 
   return (
     <>
-      <div className="col-lg-2 col-sm-4 h-10">
+      <div className="col-lg-2 col-6 col-md-4  h-10">
         <div className="product h-10 text-white p-2 cursor-pointer rounded-3 gray-border my-3">
           {/* start link to product details */}
           <Link className="un-underline" to={"/product-details/" + item._id}>

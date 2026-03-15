@@ -12,13 +12,14 @@ export default function CategoryNavbar() {
 
   return (
     <div>
-  <nav className={` ${styles.bg} navbar navbar-expand-lg py-3 fixed-top `}>
+  <nav className={` ${styles.bg} navbar navbar-expand-lg navbar-dark py-3 fixed-top `}>
         <div className="container-fluid ">
-          <img src={logo} alt="ElectroniXpress" /><h3 className='me-5'>Clothes X Clothes</h3>
+          {/* <h3 className='me-5'>Clothes X Clothes</h3> */}
+          <img src={logo} alt="ElectroniXpress" />
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon" />
           </button>
-          <div className="d-flex justify-content-between px-3 collapse navbar-collapse text-center" id="navbarNav">
+          <div className=" px-3 collapse navbar-collapse text-center  d-lg-flex justify-content-between " id="navbarNav">
             <div >
             <ul className="navbar-nav " >
               <li>
