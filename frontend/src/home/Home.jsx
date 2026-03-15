@@ -156,7 +156,7 @@ export default function Home() {
 
               <div className="col-lg-4 col-md-3  d-flex justify-content-center">
                 <div className="w-75 text-center cursor-pointer rounded-3 main-color-border product text-white align-content-center">
-                  <Link to={'/clothes'}><img className="w-50 mb-3" src='https://assets.adidas.com/images/w_600,f_auto,q_auto/9f081356674948ca99f3ac820134738c_9366/Essentials_Loose_Logo_Tank_Top_White_GL0567_21_model.jpg' alt="" /></Link>
+                  <Link to={'/clothes'}><img className="w-50 mb-3" src='https://assets.adidas.com/images/w_600,f_auto,q_auto/304055d5fec84445b597ac4500f9c26b_9366/Tiro_21_Windbreaker_Black_GP4975_01_laydown.jpg' alt="" /></Link>
                   <h5>Clothes</h5>
                 </div>
               </div>
