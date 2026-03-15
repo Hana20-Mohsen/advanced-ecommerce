@@ -6,11 +6,11 @@ export default function Footer() {
         <>
             <div className=" px-3 pt-5 mt-5">
                 <div className="row bg-blackAndGray pb-4 ">
-                    <div className="col-md-5 text-center">
-                    <img className='w-25 me-md-5 ' src={logoImg}alt="ElectroniXpress" />
-                    <h6 className='main-color'>Clothes X Clothes@Ecommerce.com</h6>
+                    <div className="col-md-3 text-center mb-3">
+                    <img className='custom-width me-md-5  ' src={logoImg}alt="ElectroniXpress" />
+                    {/* <h6 className='main-color'>Clothes X Clothes@Ecommerce.com</h6> */}
                     </div>
-                    <div className="col-md-2 text-white fs-6">
+                    <div className="col-md-3 text-white fs-6 text-center text-md-start my-2">
                         <h3>Architecture</h3>
                         <ul className=' list-unstyled'>
                             <li>
@@ -32,7 +32,7 @@ export default function Footer() {
                             </li>
                         </ul>
                     </div>
-                    <div className="col-md-2 text-white fs-6">
+                    <div className="col-md-3 text-white fs-6 text-center text-md-start my-2">
                         <h3>Services</h3>
                         <ul className=' list-unstyled'>
                             <li>
@@ -50,7 +50,7 @@ export default function Footer() {
                           
                         </ul>
                     </div>
-                    <div className="col-md-3 text-white fs-6">
+                    <div className="col-md-3 text-white fs-6 text-center text-md-start">
                     <h3>Follow</h3>
                     <ul className='list-unstyled fs-5'>
                         <Link className='un-underline'>

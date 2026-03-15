@@ -19,10 +19,10 @@ export default function MainSlider() {
   };
 
   return (
-    <div className=" my-5">
-      <Slider {...settings}>
+    <div className=" my-5  ">
+      <Slider {...settings} className="">
         {/*----------------------------------------- first slide --------------------------------------- */}
-        <div className="mainSlider_bg mt-3">
+        <div className="mainSlider_bg mt-3 pb-5 ">
           <div
             className={` d-flex flex-column-reverse flex-md-row align-items-center justify-content-between `}
           >
@@ -30,7 +30,7 @@ export default function MainSlider() {
               <div className="banner-content text-white p-2">
                 <h2>ZX 2K Boost 2.0 Shoes</h2>
                 <p>Limited stocks available. Grab it now!</p>
-                <Link to="/shoes" style={{ textDecoration: 'none' , color:"black" }} className=" collection bg-main mt-3 rounded-3 p-2 ">
+                <Link to="/shoes" style={{ textDecoration: 'none' , color:"black" }} className=" collection bg-main mt-3 rounded-3 p-2 fw-medium">
                  Shop Collection
                 </Link>
               </div>
@@ -43,7 +43,7 @@ export default function MainSlider() {
 
         {/*----------------------------------------- second slide --------------------------------------- */}
 
-        <div className="mainSlider_bg mt-3">
+        <div className="mainSlider_bg mt-3 pb-5">
           <div
             className={` d-flex flex-column-reverse flex-md-row align-items-center justify-content-between `}
           >
@@ -52,7 +52,7 @@ export default function MainSlider() {
                 <h2>Adidas Collection</h2>
                 <p>Limited stocks available. Grab it now!</p>
 
-                <Link to="/accessories" style={{ textDecoration: 'none' , color:"black" }} className=" collection bg-main mt-3 rounded-3 p-2 ">
+                <Link to="/accessories" style={{ textDecoration: 'none' , color:"black" }} className=" collection bg-main mt-3 rounded-3 p-2 fw-medium">
                  Shop Collection
                 </Link>
               </div>

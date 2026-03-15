@@ -173,11 +173,18 @@ background-color: var(--gray);
 
 
 .section-title h3::after {
-  content: "____________________________________________________________________________________________________________________________";
+  content: "________________";
   font-size: 19px;
   color: var(--mainColor);
   letter-spacing: 0.06rem;
   margin-left: 16px;
+}
+.section-title h3::before {
+  content: "________________";
+  font-size: 19px;
+  color: var(--mainColor);
+  letter-spacing: 0.06rem;
+  margin-right: 16px;
 }
 
 
@@ -221,7 +228,19 @@ color: white !important
 .w-15{
   width: 15%;
 }
-
+.custom-width{
+width:20%;
+}
+@media (min-width:768px){
+.custom-width{
+width:75%;
+}
+}
+@media (min-width:1024px){
+.custom-width{
+width:50%;
+}
+}
 /* start admin */
 .nav-item{
   margin-bottom: 15px !important;

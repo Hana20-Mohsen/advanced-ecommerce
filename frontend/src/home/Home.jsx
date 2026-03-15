@@ -94,30 +94,30 @@ export default function Home() {
       <div className={`  ${styles.main} pt-2`}>
         <MainSlider />
         {/* --------------------------------------start under slider --------------------------------- */}
-        <div className="container  mb-5">
+        <div className="container  mb-5 ">
           <div className="row">
-            <div className="col-lg-3 col-md-6 text-md-center py-2 px-4">
+            <div className="col-lg-3 col-md-6 text-center text-lg-start py-2 px-4 mb-4 ">
               <i className="fa-solid fa-cart-shopping fs-2 main-color mb-3"></i>
-              <div className="text-white">
-                <h4>Free delivery</h4>
-                <span>to any place you want around the world</span>
+              <div className="text-white  ">
+                <h4 className="">Free delivery</h4>
+                <span className="mb-4 ">to any place you want around the world</span>
               </div>
             </div>
-            <div className="col-lg-3 col-md-6 text-md-center p-2 px-4 ">
+            <div className="col-lg-3 col-md-6 text-center text-lg-start p-2 px-4 mb-4 ">
               <i className="fa-solid fa-tag  fs-2 main-color mb-3"></i>
               <div className="text-white">
                 <h4>Daily offers</h4>
                 <span>to eny place you want around the world</span>
               </div>
             </div>
-            <div className="col-lg-3 col-md-6 text-md-center p-2 px-4">
+            <div className="col-lg-3 col-md-6 text-center text-lg-start p-2 px-4 mb-4">
               <i className="fa-solid fa-medal fs-2 main-color mb-3"></i>
               <div className="text-white">
                 <h4>Quality guarantee</h4>
                 <span>to eny place you want around the world</span>
               </div>
             </div>
-            <div className="col-lg-3 col-md-6 text-md-center p-2 px-4">
+            <div className="col-lg-3 col-md-6 text-center text-lg-start p-2 px-4 mb-4">
               <i className="fa-solid fa-shield fs-2 main-color mb-3"></i>
               <div className="text-white">
                 <h4>100% secure payment</h4>
@@ -131,12 +131,12 @@ export default function Home() {
         {/* --------------------------------------start Category --------------------------------- */}
         <section>
           <div className="container">
-            <div className="section-title overflow-hidden mb-4 main-color">
+            <div className="section-title overflow-hidden mb-4 main-color d-flex justify-content-center">
               <h3>Categories</h3>
             </div>
-            <div className="row gy-4 my-5">
+            <div className="row gy-4 my-5 d-flex justify-content-center">
               {/* phone */}
-              <div className="col-lg-4 col-md-3  d-flex justify-content-center">
+              <div className="col-lg-4 col-md-4 d-flex justify-content-center">
                 <div className="w-75 text-center  py-4 cursor-pointer rounded-3 main-color-border product text-white align-content-center">
                  <Link to={'/shoes'}> <img className="w-50 mb-3" src='https://assets.adidas.com/images/w_600,f_auto,q_auto/2b04943c525e4909a7a5a9fa0116153d_9366/Five_Ten_Kestrel_Lace_Mountain_Bike_Shoes_Grey_BC0770_01_standard.jpg' alt="shose" /></Link>
                   <h5>Shose</h5>
@@ -145,7 +145,7 @@ export default function Home() {
 
               {/*laptop  */}
 
-              <div className="col-lg-4 col-md-3  d-flex justify-content-center">
+              <div className="col-lg-4 col-md-4 d-flex justify-content-center">
                 <div className="w-75 text-center  cursor-pointer rounded-3 main-color-border product text-white align-content-center">
                   <Link to={'/accessories'}><img className="w-75  mb-3" src='https://assets.adidas.com/images/w_600,f_auto,q_auto/a520df1b51384c00af9caca100489f04_9366/Trefoil_Backpack_Black_EX6752_01_standard.jpg' alt="" /></Link>
                   <h5>Accessories</h5>
@@ -154,7 +154,7 @@ export default function Home() {
 
               {/* head phones */}
 
-              <div className="col-lg-4 col-md-3  d-flex justify-content-center">
+              <div className="col-lg-4 col-md-4 d-flex justify-content-center">
                 <div className="w-75 text-center cursor-pointer rounded-3 main-color-border product text-white align-content-center">
                   <Link to={'/clothes'}><img className="w-50 mb-3" src='https://assets.adidas.com/images/w_600,f_auto,q_auto/304055d5fec84445b597ac4500f9c26b_9366/Tiro_21_Windbreaker_Black_GP4975_01_laydown.jpg' alt="" /></Link>
                   <h5>Clothes</h5>
@@ -192,7 +192,7 @@ export default function Home() {
               </div>
               {/* second col */}
 
-              <div className="col-md-5 text-white align-content-center">
+              <div className="col-md-5 text-white align-content-center text-center text-md-start">
                 <h2 className=" fs-1">
                   <span className="main-color">30%</span> Discount on Nike
                   collection

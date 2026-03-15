@@ -8,3 +8,17 @@
 .c{
     color: #FFFFFF;
 }
+.custom_width{
+width:20%;
+
+}
+@media (min-width:768px){
+.custom_width{
+width:10%;
+}
+}
+@media (min-width:1024px){
+.custom_width{
+width:5%;
+}
+}

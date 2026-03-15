@@ -8,7 +8,10 @@ import { getSocketInstance } from "../../../Socket/socketManager.js";
 const login = asyncHandler(async (req, res, next) => {
     const io = getSocketInstance()
     const { email, password } = req.body
+    console.log({email , password});
+    
     const user = await User.findOne({ email })
+  
     if (!user) {
         return next(new Error('user not found', { cause: 404 }))
     }
@@ -24,7 +27,8 @@ const login = asyncHandler(async (req, res, next) => {
         payload: { id: user._id, isloggedIn: true }
         , signature: user.role == userRoles.admin ? process.env.TOKEN_SIGNATURE_ADMIN : process.env.TOKEN_SIGNATURE, options: { expiresIn: '11h' }
     });
- 
+      console.log(token);
+    
     // res.cookie("token", token, {
     //     httpOnly: true,      // JS cannot access it
     //     secure: false,       // true in production (HTTPS)
