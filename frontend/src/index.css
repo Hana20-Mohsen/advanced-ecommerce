@@ -79,6 +79,18 @@ textarea:focus, input:focus {
 .main-color-bottom-border{
   border-bottom: solid 2px var(--mainColor);
 }
+@media(max-width:768px){
+  .product{
+box-shadow: var(--gray) !important;
+border: solid 1px var(--mainColor) !important;
+
+}
+.product .btn{
+  transform: translateY(0) !important;
+  opacity: 100 !important;
+  margin-top: 10px;
+}
+}
 .product:hover{
 box-shadow: var(--gray);
 border: solid 2px var(--mainColor);
