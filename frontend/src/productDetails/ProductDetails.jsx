@@ -23,35 +23,36 @@ export default function ProductDetails() {
     const [reviewText, setReviewText] = useState('');
     const [rating, setRating] = useState(0);
     const [hoverRating, setHoverRating] = useState(0);
+    const [showMore, setShowMore] = useState(false);
+    const maxLength = 120;
 
 
-    
     const getImageUrl = (imagePath) => {
-  if (!imagePath) return '/placeholder-image.jpg';
-  // Check if it's already a full URL (for seeded data maybe)
-  if (imagePath.startsWith('http')) return imagePath;
-  // Otherwise construct the proper URL
-  return `${process.env.REACT_APP_BACKEND_URL}/uploads/${imagePath}`;
-};
+        if (!imagePath) return '/placeholder-image.jpg';
+        // Check if it's already a full URL (for seeded data maybe)
+        if (imagePath.startsWith('http')) return imagePath;
+        // Otherwise construct the proper URL
+        return `${process.env.REACT_APP_BACKEND_URL}/uploads/${imagePath}`;
+    };
 
-         async function getPrevValues(){
-        let data=  await getFromWishList()
-        if(data?.status==='success'){
-        const loved = data.wishlistItems.map(element => element._id);
-          setIsLoved(loved);
+    async function getPrevValues() {
+        let data = await getFromWishList()
+        if (data?.status === 'success') {
+            const loved = data.wishlistItems.map(element => element._id);
+            setIsLoved(loved);
         }
-      let cartItems= await getCart();
-      if(cartItems?.status==='success'){
-     let items=cartItems.cartItems.map(element => element.product._id);
-      setInCart(items)
-      setCounter(cartItems.length)
-      }
-  
-      }
-      useEffect(() => {
+        let cartItems = await getCart();
+        if (cartItems?.status === 'success') {
+            let items = cartItems.cartItems.map(element => element.product._id);
+            setInCart(items)
+            setCounter(cartItems.length)
+        }
+
+    }
+    useEffect(() => {
         // هنا بتحطي الفانكشن اللي تشتغل مرة واحدة بس
         getPrevValues()
-      }, []);
+    }, []);
 
     // Fetch product data
     async function getProduct() {
@@ -62,6 +63,10 @@ export default function ProductDetails() {
         cacheTime: 3000,
         refetchOnWindowFocus: false
     });
+    const text = showMore
+        ? data?.data?.product.description
+        : data?.data?.product.description?.slice(0, maxLength) + "...";
+
 
     // Add review mutation
     const addReviewMutation = useMutation(
@@ -163,15 +168,15 @@ export default function ProductDetails() {
     if (isLoading) return <Loader />;
 
     return (
-        <div className='ProductDetails Dark-Color text-white h-100vh Details pt-5'>
+        <div className='ProductDetails Dark-Color text-white h-100vh Details pt-5 mt-4'>
             <div className=' my-4 pt-4 position-fixed ms-5'>
-                <Link to="/products"> <i className="fa-solid fa-circle-arrow-left main-color fs-2"></i></Link>
+                <Link to="/products"> <i className="fa-solid fa-circle-arrow-left main-color fs-1"></i></Link>
             </div>
             <div className="container py-5 mb-5">
                 <div className="row mt-5 gx-5">
-                    <div className="col-md-3 product text-white p-2 rounded-3 my-3 main-color-border">
-                        {/* src={data?.data?.product.images[0]} */}
-                        <img className='w-100' src={getImageUrl(data?.data?.product.images?.[0])}  alt={data?.data?.product.name} />
+                    {/* main-color-border product */}
+                    <div className="col-md-3  text-white p-2 rounded-3 my-3 ">
+                        <img className='w-100' src={getImageUrl(data?.data?.product.images?.[0])} alt={data?.data?.product.name} />
                     </div>
                     <div className="col-md-9 mt-5">
                         <div className='d-flex justify-content-between'>
@@ -179,13 +184,25 @@ export default function ProductDetails() {
                                 <h4 className='my-2 fw-bold'>{data?.data?.product.name}</h4>
                             </div>
                             <div>
-                                <i 
-                                    onClick={() => addProductToWishList(data?.data?.product._id)} 
+                                <i
+                                    onClick={() => addProductToWishList(data?.data?.product._id)}
                                     className={`heart-icon mt-2 me-2 fs-4 icon-link fa-solid fa-heart ${isLoved.includes(data?.data?.product._id) ? 'text-danger' : ''}`}
                                 ></i>
                             </div>
                         </div>
-                        <p className='my-3'>{data?.data?.product.description}</p>
+                        {/* <p className='my-3'>{data?.data?.product.description}</p> */}
+                        <p className="my-3">
+                            {text}
+
+                            {data?.data?.product.description?.length > maxLength && (
+                                <span
+                                    style={{ color: "#2ff3e0", cursor: "pointer", marginLeft: "6px" }}
+                                    onClick={() => setShowMore(!showMore)}
+                                >
+                                    {showMore ? "See less" : "See more"}
+                                </span>
+                            )}
+                        </p>
                         <div className='d-flex justify-content-between my-4'>
                             <div>
                                 {/* <span className='main-color'>{data?.data?.product.category}</span> */}
@@ -209,11 +226,11 @@ export default function ProductDetails() {
                             </div>
                         </div>
                         <p className={`fs-6 fw-semibold m-0 ${data?.data?.product.countInStock === 0 ? 'text-danger' : 'main-color'}`}>
-  {data?.data?.product.countInStock === 0 ? 'Not available' : `In Stock: ${data?.data?.product.countInStock}`}
-</p>
-                        <button 
-                            disabled={!btnLoading || data?.data?.product.countInStock === 0} 
-                            onClick={() => addProductToCart(data?.data?.product._id)} 
+                            {data?.data?.product.countInStock === 0 ? 'Not available' : `In Stock: ${data?.data?.product.countInStock}`}
+                        </p>
+                        <button
+                            disabled={!btnLoading || data?.data?.product.countInStock === 0}
+                            onClick={() => addProductToCart(data?.data?.product._id)}
                             className='icon btn bg-main w-100 border-secondary'
                         >
                             {inCart.includes(data?.data?.product._id) ? 'Remove from Cart' : 'Add To Cart'}
@@ -224,7 +241,7 @@ export default function ProductDetails() {
                 {/* Reviews Section */}
                 <div className="reviews-section mt-5">
                     <h3 className="mb-4">Customer Reviews</h3>
-                    
+
                     {/* Add Review Form */}
                     {Cookies.get('token') && (
                         <div className="add-review mb-5 p-4 rounded" style={{ backgroundColor: '#2a2a2a' }}>
@@ -240,8 +257,8 @@ export default function ProductDetails() {
                                         placeholder="Share your thoughts about this product..."
                                     />
                                 </div>
-                                <button 
-                                    type="submit" 
+                                <button
+                                    type="submit"
                                     className="btn btn-primary mt-3"
                                     disabled={addReviewMutation.isLoading}
                                 >
@@ -250,7 +267,7 @@ export default function ProductDetails() {
                             </form>
                         </div>
                     )}
-                    
+
                     {/* Reviews List */}
                     <div className="reviews-list">
                         {data?.data?.product.reviews?.length > 0 ? (
@@ -263,9 +280,9 @@ export default function ProductDetails() {
                                                 <h5 className="mb-0">{review.userName}</h5>
                                                 <div className="rating">
                                                     {Array.from({ length: 5 }).map((_, i) => (
-                                                        <span 
-                                                            key={i} 
-                                                            style={{ 
+                                                        <span
+                                                            key={i}
+                                                            style={{
                                                                 color: i < review.rating ? '#ffc107' : '#e4e5e9',
                                                                 fontSize: '18px'
                                                             }}
@@ -286,9 +303,9 @@ export default function ProductDetails() {
                                         </div>
                                     ))
                                 }
-                                
+
                                 {data.data.product.reviews.length > 3 && (
-                                    <button 
+                                    <button
                                         className="btn btn-outline-secondary mt-3"
                                         onClick={() => setShowAllReviews(!showAllReviews)}
                                     >
