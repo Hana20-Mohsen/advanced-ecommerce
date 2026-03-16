@@ -232,7 +232,6 @@ color: white !important
 
 .bg-grad{
   background-image: linear-gradient(to bottom ,var(--dark),var(--gray));
-  height: 100vh;
 }
 .bg-blackAndGray{
   background-image: linear-gradient(to bottom ,var(--dark),var(--gray));

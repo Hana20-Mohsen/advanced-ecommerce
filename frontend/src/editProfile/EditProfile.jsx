@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { ProfileContext } from '../context/ProfileContext.js';
-
+import styles from './EditProfile.module.css'
 export default function EditProfile() {
   const navigate = useNavigate();
   const [Errmsg, setErrmsg] = useState('');
@@ -75,8 +75,8 @@ export default function EditProfile() {
   }, [userData]);
 
   return (
-    <div className='bg-grad mt-5'>
-      <div className="container light-style flex-grow-1 container-p-y py-5">
+    <div className='bg-grad  vh-100 p-0'>
+      <div className="container light-style flex-grow-1 container-p-y py-5 mt-5">
         <h4 className="font-weight-bold py-3 mb-4 text-white">
           Account settings
         </h4>

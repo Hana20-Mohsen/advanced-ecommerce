@@ -3,16 +3,16 @@ body {
     margin-top: 20px;
 }
 .profileData_holder{
-    width: 75%;
+    width: 75% !important;
 }
 @media (max-width:425px) {
     .profileData_holder{
-    width: 95% !important;
+    width: 90% !important;
 }
 }
 .backToHome{
     left: -5%;
-    top: 20%;
+    top: 25%;
 }
 .ui-w-80 {
     width : 80px !important;
