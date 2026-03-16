@@ -15,10 +15,10 @@ export default function Products() {
     }/api/v1/product/all`)
   }
 
- let {data , isError , isLoading , isFetching}=  useQuery('getProducts' , getProducts , {
-  cacheTime:1000
-})
-
+ let {data , isError , isLoading , isFetching}=  useQuery({
+    queryKey: ["getProducts"],
+    queryFn: getProducts,
+  });
 
   async function getPrevValues() {
     let data = await getFromWishList();

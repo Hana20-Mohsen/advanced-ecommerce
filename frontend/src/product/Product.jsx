@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useQuery , useQueryClient } from 'react-query';
+import { useQuery , useQueryClient , useMutation } from 'react-query';
 import { Link, useParams } from "react-router-dom";
 import { storeContext } from "../context/storeContext";
 import { toast } from "react-toastify";
@@ -40,31 +40,89 @@ export default function Product({ item }) {
   return `${process.env.REACT_APP_BACKEND_URL}/uploads/${imagePath}`;
 };
 
-  async function addProductToCart(productId) {
-    setBtnLoading(false);
-    let data = await addToCart(productId);
-    if (data?.status == "success") {
-      let items = data.cartItems.map((element) => element.product._id);
-      setInCart(items);
-      setCounter(data.length);
-      setBtnLoading(true);
-      queryClient.invalidateQueries(["cart"]);
-      toast.success("Product added successfully !");
-    } else if (data?.status == "remove") {
-      let items = data.cartItems.map((element) => element.product._id);
-      setInCart(items);
-      setCounter(data.length);
-      setBtnLoading(true);
-      toast.error("Product deleted successfully !");
+
+const addToCartMutation = useMutation({
+  mutationFn: addToCart,
+
+  onMutate: async (product) => {
+    await queryClient.cancelQueries(['cart'])
+
+    const previousCart = queryClient.getQueryData(['cart'])
+
+    queryClient.setQueryData(['cart'], (old) => ({
+      ...old,
+      items: [...(old?.items || []), product]
+    }))
+
+    return { previousCart }
+  },
+
+  onError: (err, product, context) => {
+    queryClient.setQueryData(['cart'], context.previousCart)
+  },
+  onSuccess: (data) => {
+
+    let items = data.cartItems.map((el) => el.product._id)
+
+    setInCart(items)
+    setCounter(data.length)
+    setCartItems(data.cartItems)
+    setTotalPrice(data.totalPrice)
+
+    if (data?.status === "success") {
+      toast.success("Product added successfully!")
     }
-    setCartItems(data.cartItems);
-    setTotalPrice(data.totalPrice);
-    // if(data.status=='success'){
-    //   setBtnLoading(true)
-    //   setCounter(data.numOfCartItems)
-    //   toast.success("Product added successfully !")
-    // }
+
+    if (data?.status === "remove") {
+      toast.error("Product deleted successfully!")
+    }
+  },
+
+  onSettled: () => {
+    queryClient.invalidateQueries(['cart'])
+    setBtnLoading(true)
+  },
+
+  onSettled: () => {
+    queryClient.invalidateQueries(['cart'])
   }
+})
+async function addProductToCart(productId) {
+
+  setBtnLoading(false)
+
+  try {
+    await addToCartMutation.mutateAsync(productId)
+  } catch (error) {
+    console.log(error)
+  }
+
+}
+  // async function addProductToCart(productId) {
+  //   setBtnLoading(false);
+  //   let data = await addToCart(productId);
+  //   if (data?.status == "success") {
+  //     let items = data.cartItems.map((element) => element.product._id);
+  //     setInCart(items);
+  //     setCounter(data.length);
+  //     setBtnLoading(true);
+  //     queryClient.invalidateQueries(["cart"]);
+  //     toast.success("Product added successfully !");
+  //   } else if (data?.status == "remove") {
+  //     let items = data.cartItems.map((element) => element.product._id);
+  //     setInCart(items);
+  //     setCounter(data.length);
+  //     setBtnLoading(true);
+  //     toast.error("Product deleted successfully !");
+  //   }
+  //   setCartItems(data.cartItems);
+  //   setTotalPrice(data.totalPrice);
+  //   // if(data.status=='success'){
+  //   //   setBtnLoading(true)
+  //   //   setCounter(data.numOfCartItems)
+  //   //   toast.success("Product added successfully !")
+  //   // }
+  // }
 
   // add to WishList function
 

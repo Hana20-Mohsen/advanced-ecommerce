@@ -60,7 +60,7 @@ export default function Cart() {
 
       setInCart((prev) => prev.filter((productId) => productId !== id));
 
-      setCounter(data?.length);
+      // setCounter(data?.length);
       toast.error("Product deleted successfully");
     }
   }
@@ -69,11 +69,11 @@ export default function Cart() {
 
   async function UpdateProductQuantity(id, operation) {
     let data = await UpdateQuantity(id, operation);
-    // console.log(data);
+    console.log(data);
     if (data.status == "success") {
       queryClient.invalidateQueries(["cart"]);
       // setData(data);
-      setCounter(data?.length);
+      // setCounter(data?.length);
       toast.success("Product Updated successfully");
     }
   }
@@ -94,8 +94,7 @@ export default function Cart() {
 
   // call get cart item function
   useEffect(() => {
-    console.log(data);
-
+  setCounter(data?.length)
   }, [data]);
   if (isLoading) return <Loader />;
   if (!data?.cartItems?.length) {
