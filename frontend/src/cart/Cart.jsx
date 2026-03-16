@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useQuery , useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { storeContext } from "../context/storeContext";
 import Loader from "../Loader/Loader";
 import EmptyCart from "../EmptyCart/EmptyCart";
@@ -24,7 +24,7 @@ export default function Cart() {
   // const [data, setData] = useState([]);
   const [showConfirm, setShowConfirm] = useState(false);
 
-    const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: () => getCart(),
     placeholderData: (prev) => prev,
@@ -32,13 +32,13 @@ export default function Cart() {
   });
 
 
-   const getImageUrl = (imagePath) => {
-  if (!imagePath) return '/placeholder-image.jpg';
-  // Check if it's already a full URL (for seeded data maybe)
-  if (imagePath.startsWith('http')) return imagePath;
-  // Otherwise construct the proper URL
-  return `${process.env.REACT_APP_BACKEND_URL}/uploads/${imagePath}`;
-};
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return '/placeholder-image.jpg';
+    // Check if it's already a full URL (for seeded data maybe)
+    if (imagePath.startsWith('http')) return imagePath;
+    // Otherwise construct the proper URL
+    return `${process.env.REACT_APP_BACKEND_URL}/uploads/${imagePath}`;
+  };
 
   // function to delete item from cart
 
@@ -53,17 +53,17 @@ export default function Cart() {
   //   }
   // }
   async function deleteCartItem(id) {
-  let data = await reomveCartItem(id);
+    let data = await reomveCartItem(id);
 
-  if (data.status === "success") {
-    queryClient.invalidateQueries(["cart"]);
+    if (data.status === "success") {
+      queryClient.invalidateQueries(["cart"]);
 
-    setInCart((prev) => prev.filter((productId) => productId !== id));
+      setInCart((prev) => prev.filter((productId) => productId !== id));
 
-    setCounter(data?.length);
-    toast.error("Product deleted successfully");
+      setCounter(data?.length);
+      toast.error("Product deleted successfully");
+    }
   }
-}
 
   // function to Update item from cart
 
@@ -95,27 +95,28 @@ export default function Cart() {
   // call get cart item function
   useEffect(() => {
     console.log(data);
-  
+
   }, [data]);
   if (isLoading) return <Loader />;
   if (!data?.cartItems?.length) {
-  return <EmptyCart />;
-}
-//   if (!data?.cartItems || data?.cartItems?.length === 0) {
-//   return <EmptyCart />;
-// }
+    return <EmptyCart />;
+  }
+  //   if (!data?.cartItems || data?.cartItems?.length === 0) {
+  //   return <EmptyCart />;
+  // }
   // if (data == []) return <EmptyCart />;
   // if(data.numOfCartItems==0)return <EmptyCart/>
 
   return (
-    <div className="Dark-Color text-white py-5 position-relative">
-      <div className=" my-4 pt-4 position-fixed ms-5">
-        <Link to="/products">
-          {" "}
-          <i className="fa-solid fa-circle-arrow-left main-color fs-2 pt-2"></i>
-        </Link>
-      </div>
-      <div className="container my-5 mainSlider_bg py-3">
+    <div className="mainSlider_bg  text-white mt-5 position-relative">
+
+      <div className="container mainSlider_bg py-5">
+        <div className=" mt-4 pt-4 ms-3">
+          <Link to="/products">
+            {" "}
+            <i className="fa-solid fa-circle-arrow-left main-color fs-1 pt-2"></i>
+          </Link>
+        </div>
         <h2 className="pt-4">Shop Cart :</h2>
         <p className="main-color">
           {" "}
@@ -127,14 +128,14 @@ export default function Cart() {
         {data?.cartItems?.map((item) => {
           return (
             <div key={item._id} className="row border-bottom py-2">
-              <div className="col-md-1">
+              <div className="col-10 col-md-2 d-flex justify-content-center align-items-center m-auto mb-3">
                 <Link to={"/product-details/" + item.product._id}>
                   {" "}
                   <img className="w-100" src={getImageUrl(item.product.images?.[0])} alt="" />
                 </Link>
               </div>
-              <div className="col-md-11 d-flex justify-content-between align-items-center">
-                <div>
+              <div className="col-10 col-md-10 d-flex justify-content-between align-items-center m-auto">
+                <div className="">
                   <h5>{item.product.name}</h5>
                   <p className=" fs-6 main-color m-0">
                     {" "}
@@ -150,7 +151,7 @@ export default function Cart() {
                     <i className="fa-solid fa-trash-can main-color "></i> Remove
                   </button>
                 </div>
-                <div className="px-5 d-flex justify-content-between">
+                <div className=" d-flex justify-content-end ">
                   <button
                     disabled={item.quantity >= item.product.countInStock}
                     onClick={() => [
@@ -176,13 +177,12 @@ export default function Cart() {
           );
         })}
 
-        <div className=" d-flex justify-content-between">
-          <div>
+        <div className=" d-md-flex justify-content-md-between justify-content-evenly" >
+          <div className="d-flex justify-content-between ">
             <Link
               to="/placeorder"
-              className={`btn text-white bg-main my-3 ${
-                !data?.length ? "disabled" : ""
-              }`}
+              className={`btn text-white bg-main my-3 me-md-5  ${!data?.length ? "disabled" : ""
+                }`}
             >
               Place Order
             </Link>
@@ -195,19 +195,19 @@ export default function Cart() {
               Reset cart
             </button> */}
             <button
-  className="btn bg-danger text-white ms-5"
-  onClick={() => {
-    setShowConfirm(true); // Show the confirmation box
-  }}
->
-  Reset cart
-</button>
+              className="btn bg-danger text-white my-3"
+              onClick={() => {
+                setShowConfirm(true); // Show the confirmation box
+              }}
+            >
+              Reset cart
+            </button>
           </div>
 
           <div>
             <Link
               to="/orders"
-              className={`btn text-white bg-main mt-3 mb-3 me-3  `}
+              className={`btn text-white bg-main mt-3 mb-3  `}
             >
               my orders
             </Link>
@@ -215,27 +215,31 @@ export default function Cart() {
         </div>
       </div>
       {showConfirm && (
-  <div className="container bg-dark w-50 h-25 rounded-5 p-5 pt-3 text-center position-absolute confirmation">
-    <h3>Are You Sure ?</h3>
-    <div className="py-4 w-50 m-auto d-flex justify-content-around">
-      <button
-        className="btn bg-danger w-25"
-        onClick={() => {
-          deleteMyCart();
-          setShowConfirm(false); // Hide confirmation after delete
-        }}
-      >
-        Yes
-      </button>
-      <button
-        className="btn bg-success w-25"
-        onClick={() => setShowConfirm(false)} // Just hide confirmation
-      >
-        No
-      </button>
-    </div>
-  </div>
-)}
+       <div className="confirmation-holder position-fixed d-flex justify-content-center align-items-center">
+         <div className="container confirmation  h-25 rounded-5 py-4 text-center d-flex justify-content-center align-items-center">
+          <div>
+            <h3 >Are You Sure ?</h3>
+            <div className="py-4  m-auto d-flex justify-content-between">
+              <button
+                className="btn bg-danger  px-4"
+                onClick={() => {
+                  deleteMyCart();
+                  setShowConfirm(false); // Hide confirmation after delete
+                }}
+              >
+                Yes
+              </button>
+              <button
+                className="btn bg-success px-4"
+                onClick={() => setShowConfirm(false)} // Just hide confirmation
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+       </div>
+      )}
 
     </div>
   );
