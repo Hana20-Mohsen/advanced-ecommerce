@@ -22,7 +22,7 @@ export default function MainSlider() {
     <div className=" my-5  ">
       <Slider {...settings} className="">
         {/*----------------------------------------- first slide --------------------------------------- */}
-        <div className="mainSlider_bg mt-3 pb-5 ">
+        <div className="mainSlider_bg mt-3 pb-5 px-4 ">
           <div
             className={` d-flex flex-column-reverse flex-md-row align-items-center justify-content-between `}
           >
@@ -43,7 +43,7 @@ export default function MainSlider() {
 
         {/*----------------------------------------- second slide --------------------------------------- */}
 
-        <div className="mainSlider_bg mt-3 pb-5">
+        <div className="mainSlider_bg mt-3 pb-5 px-4">
           <div
             className={` d-flex flex-column-reverse flex-md-row align-items-center justify-content-between `}
           >

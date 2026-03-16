@@ -169,16 +169,16 @@ export default function ProductDetails() {
 
     return (
         <div className='ProductDetails Dark-Color text-white h-100vh Details pt-5 mt-4'>
-            <div className=' my-4 pt-4 position-fixed ms-5'>
+            <div className='mt-5 ms-3'>
                 <Link to="/products"> <i className="fa-solid fa-circle-arrow-left main-color fs-1"></i></Link>
             </div>
-            <div className="container py-5 mb-5">
-                <div className="row mt-5 gx-5">
+            <div className="container mb-5">
+                <div className="row ">
                     {/* main-color-border product */}
-                    <div className="col-md-3  text-white p-2 rounded-3 my-3 ">
+                    <div className="col-md-3 col-10 d-flex justify-content-center align-items-center m-auto  text-white  rounded-3 my-3 ">
                         <img className='w-100' src={getImageUrl(data?.data?.product.images?.[0])} alt={data?.data?.product.name} />
                     </div>
-                    <div className="col-md-9 mt-5">
+                    <div className="col-md-9 mt-3 px-5">
                         <div className='d-flex justify-content-between'>
                             <div>
                                 <h4 className='my-2 fw-bold'>{data?.data?.product.name}</h4>
@@ -239,7 +239,7 @@ export default function ProductDetails() {
                 </div>
 
                 {/* Reviews Section */}
-                <div className="reviews-section mt-5">
+                <div className="reviews-section mt-5 px-3">
                     <h3 className="mb-4">Customer Reviews</h3>
 
                     {/* Add Review Form */}
@@ -275,7 +275,7 @@ export default function ProductDetails() {
                                 {data.data.product.reviews
                                     .slice(0, showAllReviews ? data.data.product.reviews.length : 3)
                                     .map((review) => (
-                                        <div key={review._id} className="review-item mb-4 p-3 rounded" style={{ backgroundColor: '#2a2a2a' }}>
+                                        <div key={review._id} className="review-item mb-4 p-3 rounded overflow-scroll" style={{ backgroundColor: '#2a2a2a' }}>
                                             <div className="d-flex justify-content-between align-items-center mb-2">
                                                 <h5 className="mb-0">{review.userName}</h5>
                                                 <div className="rating">
