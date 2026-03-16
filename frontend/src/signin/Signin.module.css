@@ -10,6 +10,12 @@
     /* font-weight: lighter; */
     
 }
+@media (max-width:575px) {
+    .MyForm{
+        width: 90% !important;
+        margin: auto;
+}
+}
 .MyInput{
     border: none !important;
   margin-bottom: 3%;

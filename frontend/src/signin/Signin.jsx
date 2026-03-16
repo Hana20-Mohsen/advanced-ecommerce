@@ -150,7 +150,7 @@ export default function Signin() {
 
           {/* Login Form */}
           <div
-            className={`${styles.MyForm} col-md-6 bg-black text-light p-4 mt-s-5`}
+            className={`${styles.MyForm} col-md-6 bg-black text-light p-4 mt-s-5 rounded-3`}
           >
             <h2 className="fw-light">Login Now</h2>
 

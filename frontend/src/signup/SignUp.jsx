@@ -109,7 +109,7 @@ if(!values.phone){
               <h2 className='mt-3 me-4'>Clothes X Clothes</h2> <span >helps you find all electronics you need</span>
                {/*//////////////////////////////////////////////////////////// end logo  /////////////////////////////////// */}
             </div>
-            <div className={`${styles.MyForm}   col-md-6 bg-black text-light p-4 mt-s-5`}>
+            <div className={`${styles.MyForm}   col-md-6 bg-black text-light p-4 mt-s-5 rounded-3`}>
               <h2 className='  fw-light'>Register Now</h2>
 
               {/*//////////////////////////////////////////////////////////// start form  /////////////////////////////////// */}

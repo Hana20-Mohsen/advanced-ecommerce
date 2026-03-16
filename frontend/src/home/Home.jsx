@@ -138,7 +138,7 @@ export default function Home() {
               {/* phone */}
               <div className="col-lg-4 col-md-4 d-flex justify-content-center">
                 <div className="w-75 text-center  py-4 cursor-pointer rounded-3 main-color-border product text-white align-content-center">
-                 <Link to={'/shoes'}> <img className="w-50 mb-3" src='https://assets.adidas.com/images/w_600,f_auto,q_auto/2b04943c525e4909a7a5a9fa0116153d_9366/Five_Ten_Kestrel_Lace_Mountain_Bike_Shoes_Grey_BC0770_01_standard.jpg' alt="shose" /></Link>
+                 <Link to={'/shoes'}> <img className="w-50 mb-3" src='https://res.cloudinary.com/dvxokqq78/image/upload/v1773666487/freepik__talk__51282-removebg-preview_zews0z.png' alt="shose" /></Link>
                   <h5>Shose</h5>
                 </div>
               </div>
@@ -147,7 +147,7 @@ export default function Home() {
 
               <div className="col-lg-4 col-md-4 d-flex justify-content-center">
                 <div className="w-75 text-center  cursor-pointer rounded-3 main-color-border product text-white align-content-center">
-                  <Link to={'/accessories'}><img className="w-75  mb-3" src='https://assets.adidas.com/images/w_600,f_auto,q_auto/a520df1b51384c00af9caca100489f04_9366/Trefoil_Backpack_Black_EX6752_01_standard.jpg' alt="" /></Link>
+                  <Link to={'/accessories'}><img className="w-75  mb-3" src='https://res.cloudinary.com/dvxokqq78/image/upload/v1773665619/Waist_bag-pana_ryu0l4.svg' alt="" /></Link>
                   <h5>Accessories</h5>
                 </div>
               </div>
@@ -156,7 +156,7 @@ export default function Home() {
 
               <div className="col-lg-4 col-md-4 d-flex justify-content-center">
                 <div className="w-75 text-center cursor-pointer rounded-3 main-color-border product text-white align-content-center">
-                  <Link to={'/clothes'}><img className="w-50 mb-3" src='https://assets.adidas.com/images/w_600,f_auto,q_auto/304055d5fec84445b597ac4500f9c26b_9366/Tiro_21_Windbreaker_Black_GP4975_01_laydown.jpg' alt="" /></Link>
+                  <Link to={'/clothes'}><img className="w-50 mb-3" src='https://res.cloudinary.com/dvxokqq78/image/upload/v1773665474/Choosing_clothes-cuate_owonti.svg' alt="" /></Link>
                   <h5>Clothes</h5>
                 </div>
               </div>
@@ -186,7 +186,8 @@ export default function Home() {
               <div className="col-md-6">
                 <img
                   className="w-100"
-                  src={discound_img}
+                  // src={discound_img}
+                  src="https://res.cloudinary.com/dvxokqq78/image/upload/v1773666609/Mobile_Marketing-rafiki_pslfzy.svg"
                   alt="apple collection"
                 />
               </div>
