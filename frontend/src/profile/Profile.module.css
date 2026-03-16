@@ -2,7 +2,18 @@ body {
     background-color: #211a1a;
     margin-top: 20px;
 }
-
+.profileData_holder{
+    width: 75%;
+}
+@media (max-width:425px) {
+    .profileData_holder{
+    width: 95% !important;
+}
+}
+.backToHome{
+    left: -5%;
+    top: 20%;
+}
 .ui-w-80 {
     width : 80px !important;
     height: auto;

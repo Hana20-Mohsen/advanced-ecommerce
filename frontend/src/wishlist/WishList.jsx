@@ -14,7 +14,7 @@ export default function WishList() {
   // const [keyId , setKeyId]=useState('')
   const [wishListItem, setWishListItems] = useState([])
   // const [showMore, setShowMore] = useState(false);
-  const maxLength = 120;
+  const maxLength = 70;
   //  const text = showMore
   //   ? data?.data?.product.description
   //   : data?.data?.product.description?.slice(0, maxLength) + "...";
@@ -90,8 +90,8 @@ export default function WishList() {
               </div>
               <div className="col-8 col-md-10 d-flex justify-content-between align-items-center">
                 <div className='px-4'>
-                  <h5>{item.description.slice(0, maxLength) + "..."
-                  }</h5>
+                  <h6 className='fw-normal'>{item.description.slice(0, maxLength) + "..."
+                  }</h6>
                   <p className=' fs-6 main-color m-0'> Price: {Number(item.price).toLocaleString()} EGP</p>
 
                 </div>
