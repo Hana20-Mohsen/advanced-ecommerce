@@ -181,7 +181,7 @@ export default function Home() {
         {/* --------------------------------------start discound --------------------------------- */}
         <div className="mt-5 mainSlider_bg py-4 ">
           <div className="container">
-            <div className="row  gx-5">
+            <div className="row  ">
               {/* fisrt col */}
               <div className="col-md-6">
                 <img
