@@ -215,8 +215,8 @@ export default function Cart() {
         </div>
       </div>
       {showConfirm && (
-       <div className="confirmation-holder position-fixed d-flex justify-content-center align-items-center">
-         <div className="container confirmation  h-25 rounded-5 py-4 text-center d-flex justify-content-center align-items-center">
+       <div className="confirmation-holder  position-fixed d-flex justify-content-center align-items-center">
+         <div className="container confirmation main-color-border  h-25 rounded-5 py-4 text-center d-flex justify-content-center align-items-center">
           <div>
             <h3 >Are You Sure ?</h3>
             <div className="py-4  m-auto d-flex justify-content-between">
