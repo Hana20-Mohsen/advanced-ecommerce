@@ -3,7 +3,7 @@ import { emailEvent } from "../../../utilities/events/email.event.js";
 import { asyncHandler } from "../../../utilities/error/error.js";
 import { generateHash } from "../../../utilities/security/hash.security.js";
 import { generateEncryption } from "../../../utilities/security/encryption.security.js";
-
+import confirmEmailTemplate from "../../../utilities/email/template/confirmEmailTemplate.js";
 const signup = asyncHandler(async (req, res, next) => {
     const { name, email, password, confirmationPassword, phone } = req.body;
     console.log(req.body);
@@ -25,6 +25,10 @@ const signup = asyncHandler(async (req, res, next) => {
     // emailEvent.emit('sendConfirmEmail' , {email})
     console.log("EMAIL:", process.env.EMAIL);
     console.log("PASS:", process.env.EMAIL_PASSWORD);
+    const emailToken = generateToken({ payload: { email }, signature: process.env.EMAIL_TOKEN_SIGNATURE })
+    console.log(`email token : `, emailToken);
+    let emailLink = `${process.env.FRONTEND_URL}/confirm-email/${emailToken}`
+    
     await sendEmail({
         to: email,
         subject: "Confirm Email",
