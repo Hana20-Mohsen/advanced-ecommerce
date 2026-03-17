@@ -1,24 +1,51 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { useQuery, useQueryClient , useMutation } from "react-query";
 import { WishListContext } from '../context/WishlistContext';
 import { productContext } from '../context/ProductContext.js';
 import { storeContext } from '../context/storeContext';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Loader from "../Loader/Loader";
 import "../wishlist/wishlist.style.css"
+import { useWishlistState } from '../hooks/useWishlistState.js';
 export default function WishList() {
-
+  const queryClient = useQueryClient();
+  const {data , isLoading , error ,isLoved , WCounter}=useWishlistState()
   // get wish list context
-  let { getFromWishList, removeWishItem, WCounter, setWCounter, } = useContext(WishListContext)
+  let { getFromWishList, removeWishItem, setWCounter, } = useContext(WishListContext)
   let { getByIds } = useContext(productContext)
-  // let {getCart} = useContext(storeContext)
-  // const [keyId , setKeyId]=useState('')
-  const [wishListItem, setWishListItems] = useState([])
-  // const [showMore, setShowMore] = useState(false);
-  const maxLength = 70;
-  //  const text = showMore
-  //   ? data?.data?.product.description
-  //   : data?.data?.product.description?.slice(0, maxLength) + "...";
 
+   const deleteWishlistItemMutation = useMutation({
+      mutationFn: removeWishItem,
+      onMutate: async (productId) => {
+        await queryClient.cancelQueries(['wishlist'])
+        const previousWishlist = queryClient.getQueryData(['wishlist'])
+    
+        queryClient.setQueryData(['wishlist'], (old) => ({
+          ...old,
+          items: old?.items?.filter(
+          (item) => item.product._id !== productId
+        )
+        }))
+    
+        return { previousWishlist }
+      },
+    
+      onError: (err, product, context) => {
+        queryClient.setQueryData(['wishlist'], context.previousWishlist)
+      },
+      onSuccess: (data) => {
+      if (data.status == 'success') {
+      toast.warning("Product deleted successfully !")
+    }
+      },
+    
+      onSettled: () => {
+        queryClient.invalidateQueries(['wishlist'])
+      }
+    })
+
+  const maxLength = 70;
 
   const getImageUrl = (imagePath) => {
     if (!imagePath) return '/placeholder-image.jpg';
@@ -31,6 +58,8 @@ export default function WishList() {
   // function to delete item from wish list
 
   async function deleteWishItem(id) {
+   
+    
     let data = await removeWishItem(id)
     console.log(data);
 
@@ -39,40 +68,16 @@ export default function WishList() {
       console.log(ids);
       let response = await getByIds(ids);
 
-      setWishListItems(response.products)
       setWCounter(data.length)
       toast.warning("Product deleted successfully !")
     }
   }
 
-
-  // // function to get cart items
-
-  // async function getCartItems(){
-  //   let cartData =await getCart()
-  //   console.log("your data from get cart = "+cartData.data.cartOwner);
-  //   setKeyId(cartData.data.cartOwner)
-
-  // }
-
   // call get wishlist item function
   useEffect(() => {
-    (async () => {
-      let data = await getFromWishList();
-      console.log(data);
-
-      if (data.status == 'success') {
-        const ids = data.wishlistItems.map(element => element);
-        // console.log(ids);
-        let response = await getByIds(ids);
-        console.log(response);
-
-
-        setWishListItems(response.products)
-      }
-    })()
+     console.log(data);
   }, []);
-
+  // if (isLoading) return <Loader />;
   return (
     <div className='Dark-Color text-white py-5'>
       <div className=' mt-5 pt-4  ms-5'>
@@ -81,7 +86,7 @@ export default function WishList() {
       <div className="container mt-3 mainSlider_bg py-3">
 
         <h2 className='mt-3'>Wish List :</h2>
-        {wishListItem?.map((item, index) => {
+        {data?.wishlistItems?.map((item, index) => {
           return <div key={index} className=" d-md-flex justify-content-between border-bottom py-2">
             <Link className='row un-underline gap-0' to={'/product-details/' + item._id}>
               <div className="col-4 col-md-2">
@@ -102,7 +107,8 @@ export default function WishList() {
 
             </Link>
             <button onClick={() => {
-              deleteWishItem(item._id)
+              // deleteWishItem(item._id)
+              deleteWishlistItemMutation.mutate(item._id)
             }} className='btn removeButton m-0 p-0 mt-2 text-white d-flex justify-content-between'> <i className="fa-solid fa-trash-can main-color me-2"></i> Remove
             </button>
             {/*  */}

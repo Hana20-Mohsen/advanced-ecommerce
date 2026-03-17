@@ -5,28 +5,20 @@ import { storeContext } from "../context/storeContext";
 import { toast } from "react-toastify";
 import { WishListContext } from "../context/WishlistContext";
 import axios from "axios";
-
+import { useWishlistState } from "../hooks/useWishlistState";
+import { useCartState } from "../hooks/useCartState";
 export default function Product({ item }) {
   const queryClient = useQueryClient();
+  const {data , isLoading , error ,isLoved , WCounter}=useWishlistState()
+  const { inCart , count}=useCartState()
   // console.log(item.images[0]);
 
   let {
-    Counter,
-    setCounter,
     addToCart,
-    getCart,
-    inCart,
-    setInCart,
-    setCartItems,
     setTotalPrice,
   } = useContext(storeContext);
   let {
     addToWishList,
-    setWCounter,
-    removeWishItem,
-    getFromWishList,
-    isLoved,
-    setIsLoved,
   } = useContext(WishListContext);
 
   let [btnLoading, setBtnLoading] = useState(true);
@@ -61,14 +53,6 @@ const addToCartMutation = useMutation({
     queryClient.setQueryData(['cart'], context.previousCart)
   },
   onSuccess: (data) => {
-
-    let items = data.cartItems.map((el) => el.product._id)
-
-    setInCart(items)
-    setCounter(data.length)
-    setCartItems(data.cartItems)
-    setTotalPrice(data.totalPrice)
-
     if (data?.status === "success") {
       toast.success("Product added successfully!")
     }
@@ -83,81 +67,44 @@ const addToCartMutation = useMutation({
     setBtnLoading(true)
   }
 })
-async function addProductToCart(productId) {
+const addProductToWishListMutation = useMutation({
+  mutationFn: addToWishList,
 
-  setBtnLoading(false)
+  onMutate: async (product) => {
+    await queryClient.cancelQueries(['wishlist'])
 
-  try {
-    await addToCartMutation.mutateAsync(productId)
-  } catch (error) {
-    console.log(error)
-  }
+    const previousWishlist = queryClient.getQueryData(['wishlist'])
 
-}
-  // async function addProductToCart(productId) {
-  //   setBtnLoading(false);
-  //   let data = await addToCart(productId);
-  //   if (data?.status == "success") {
-  //     let items = data.cartItems.map((element) => element.product._id);
-  //     setInCart(items);
-  //     setCounter(data.length);
-  //     setBtnLoading(true);
-  //     queryClient.invalidateQueries(["cart"]);
-  //     toast.success("Product added successfully !");
-  //   } else if (data?.status == "remove") {
-  //     let items = data.cartItems.map((element) => element.product._id);
-  //     setInCart(items);
-  //     setCounter(data.length);
-  //     setBtnLoading(true);
-  //     toast.error("Product deleted successfully !");
-  //   }
-  //   setCartItems(data.cartItems);
-  //   setTotalPrice(data.totalPrice);
-  //   // if(data.status=='success'){
-  //   //   setBtnLoading(true)
-  //   //   setCounter(data.numOfCartItems)
-  //   //   toast.success("Product added successfully !")
-  //   // }
-  // }
+    queryClient.setQueryData(['wishlist'], (old) => ({
+      ...old,
+      items: [...(old?.items || []), product]
+    }))
 
-  // add to WishList function
+    return { previousWishlist }
+  },
 
-  async function addProductToWishList(productId) {
-    console.log(item);
+  onError: (err, product, context) => {
+    queryClient.setQueryData(['wishlist'], context.previousWishlist)
+  },
+  onSuccess: (data) => {
 
-    let data = await addToWishList(productId);
-    console.log(data);
-    if (data.status == "success") {
-      setWCounter(data.length);
-      console.log(data.wishlist);
-      const loved = data.wishlist.map((element) => element);
-      console.log(loved);
-
-      setIsLoved(loved);
-
-      toast.success("Product added successfully !");
-    } else if (data.status == "deleted") {
-      setWCounter(data.length);
-      const loved = data.wishlist.map((element) => element);
-      setIsLoved(loved);
-      console.log(data.wishlist);
-      toast.warning("Product deleted successfully !");
+    if (data?.status === "success") {
+      toast.success("Product added successfully!")
     }
-  }
 
-  async function deleteWishItem(id) {
-    let data = await removeWishItem(id);
-    console.log(data);
-    if (data.status == "success") {
-      setWCounter(data.length);
-      // console.log(`isLoved before deleting ${isLoved}` );
-      // setIsLoved(!isLoved);
-      // console.log(`isLoved after deleting ${isLoved}` );
-      toast.warning("Product deleted successfully !");
+    if (data?.status === "deleted") {
+      toast.error("Product deleted successfully!")
     }
+  },
+
+  onSettled: () => {
+    queryClient.invalidateQueries(['wishlist'])
+    setBtnLoading(true)
   }
+})
+
     useEffect(() => {
-    queryClient.invalidateQueries(["cart"]);
+    
     }, []);
 
   return (
@@ -197,7 +144,8 @@ async function addProductToCart(productId) {
               isLoved.includes(item._id) ? "text-danger" : ""
             }`}
             onClick={() => {
-              addProductToWishList(item._id);
+              // addProductToWishList(item._id);
+              addProductToWishListMutation.mutate(item._id)
             }}
           ></i>
           <p
@@ -211,7 +159,7 @@ async function addProductToCart(productId) {
           </p>
           <button
             disabled={!btnLoading || item.countInStock === 0}
-            onClick={() => addProductToCart(item._id)}
+            onClick={() =>addToCartMutation.mutate(item._id)}
             className={`btn bg-main w-100  `}
           >
             {inCart.includes(item._id) ? " Remove item" : "Add To Cart"}

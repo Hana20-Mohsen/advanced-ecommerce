@@ -6,7 +6,7 @@
 .confirmation{
     /* right: 25%;
     top:35%; */
-    width: 50%;
+    width: 50% !important;
     background-color: #212529 !important;
 }
 

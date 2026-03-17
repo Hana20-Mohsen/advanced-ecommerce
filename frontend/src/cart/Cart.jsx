@@ -9,21 +9,14 @@ import './cart.style.css'
 import { useCartState } from "../hooks/useCartState.js";
 export default function Cart() {
   const queryClient = useQueryClient();
-  const {data , isLoading , error }=useCartState()
+  const {data , isLoading , error  }=useCartState()
   // get cart context
   let {
-    getCart,
     reomveCartItem,
-    setCounter,
     UpdateQuantity,
     deleteCart,
-    setInCart,
-    addToCart,
     // inCart
   } = useContext(storeContext);
-  // let [Loading, setLoading] = useState(true);
-
-  // const [data, setData] = useState([]);
   const [showConfirm, setShowConfirm] = useState(false);
 
   const deleteCartItemMutation = useMutation({
@@ -61,8 +54,6 @@ export default function Cart() {
     onSuccess: (data) => {
       if (data.status == "success") {
       queryClient.invalidateQueries(["cart"]);
-      // setData(data);
-      // setCounter(data?.length);
       toast.success("Product Updated successfully");
     }
     },
@@ -76,8 +67,6 @@ export default function Cart() {
     onSuccess:(data)=>{
       if (data.status == "success") {
       queryClient.invalidateQueries(["cart"]);
-      // setCounter(0);
-      // setInCart([])
       toast.error("Cart Deleted successfully");
     }
     }
@@ -89,35 +78,6 @@ export default function Cart() {
     // Otherwise construct the proper URL
     return `${process.env.REACT_APP_BACKEND_URL}/uploads/${imagePath}`;
   };
-
-  // function to Update item from cart
-
-  // async function UpdateProductQuantity(id, operation) {
-  //   let data = await UpdateQuantity(id, operation);
-  //   console.log(data);
-  //   if (data.status == "success") {
-  //     queryClient.invalidateQueries(["cart"]);
-  //     // setData(data);
-  //     // setCounter(data?.length);
-  //     toast.success("Product Updated successfully");
-  //   }
-  // }
-
-  // function to delete my cart
-
-  // async function deleteMyCart() {
-  //   let data = await deleteCart();
-  //   // console.log(data);
-  //   if (data.status == "success") {
-  //     // setData(null);
-  //     queryClient.invalidateQueries(["cart"]);
-  //     setCounter(0);
-  //     setInCart([])
-  //     toast.error("Cart Deleted successfully");
-  //   }
-  // }
-
-  // call get cart item function
   useEffect(() => {
  
   
@@ -127,11 +87,6 @@ export default function Cart() {
   if (!data?.cartItems?.length) {
     return <EmptyCart />;
   }
-  //   if (!data?.cartItems || data?.cartItems?.length === 0) {
-  //   return <EmptyCart />;
-  // }
-  // if (data == []) return <EmptyCart />;
-  // if(data.numOfCartItems==0)return <EmptyCart/>
 
   return (
     <div className="mainSlider_bg  text-white mt-5 position-relative">
@@ -216,14 +171,6 @@ export default function Cart() {
             >
               Place Order
             </Link>
-            {/* <button
-              className="btn bg-danger text-white ms-5"
-              onClick={() => {
-                deleteMyCart();
-              }}
-            >
-              Reset cart
-            </button> */}
             <button
               className="btn bg-danger text-white my-3"
               onClick={() => {

@@ -9,11 +9,15 @@ import { toast } from 'react-toastify';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import styles from './ProductDetails.module.css';
 import Cookies from 'js-cookie';
+import { useCartState } from '../hooks/useCartState.js';
+import { useWishlistState } from '../hooks/useWishlistState.js';
 
 export default function ProductDetails() {
+    const { isLoved, WCounter } = useWishlistState()
+    const { inCart, count } = useCartState()
     // Existing context and state
-    let { setCartItems, setTotalPrice, Counter, setCounter, addToCart, getCart, inCart, setInCart } = useContext(storeContext);
-    let { addToWishList, setWCounter, removeWishItem, getFromWishList, isLoved, setIsLoved } = useContext(WishListContext);
+    let { setCartItems, setTotalPrice, Counter, setCounter, addToCart, getCart, setInCart } = useContext(storeContext);
+    let { addToWishList, setWCounter, removeWishItem, getFromWishList, setIsLoved } = useContext(WishListContext);
     let [btnLoading, setBtnLoading] = useState(true);
     let x = useParams();
     const queryClient = useQueryClient();
@@ -35,23 +39,7 @@ export default function ProductDetails() {
         return `${process.env.REACT_APP_BACKEND_URL}/uploads/${imagePath}`;
     };
 
-    async function getPrevValues() {
-        let data = await getFromWishList()
-        if (data?.status === 'success') {
-            const loved = data.wishlistItems.map(element => element._id);
-            setIsLoved(loved);
-        }
-        let cartItems = await getCart();
-        if (cartItems?.status === 'success') {
-            let items = cartItems.cartItems.map(element => element.product._id);
-            setInCart(items)
-            setCounter(cartItems.length)
-        }
-
-    }
     useEffect(() => {
-        // هنا بتحطي الفانكشن اللي تشتغل مرة واحدة بس
-        getPrevValues()
     }, []);
 
     // Fetch product data
@@ -88,43 +76,76 @@ export default function ProductDetails() {
         }
     );
 
-    // Add to cart function
-    async function addProductToCart(productId) {
-        setBtnLoading(false);
-        let data = await addToCart(productId);
-        if (data?.status === 'success') {
-            let items = data.cartItems.map(element => element.product._id);
-            setInCart(items);
-            setCounter(data.length);
-            setBtnLoading(true);
-            toast.success("Product added successfully!");
-        } else if (data?.status === 'remove') {
-            let items = data.cartItems.map(element => element.product._id);
-            setInCart(items);
-            setCounter(data.length);
-            setBtnLoading(true);
-            toast.error("Product removed successfully!");
-        }
-        setCartItems(data.cartItems);
-        setTotalPrice(data.totalPrice);
-    }
+    const addToCartMutation = useMutation({
+        mutationFn: addToCart,
 
-    // Add to wishlist function
-    async function addProductToWishList(productId) {
-        let data = await addToWishList(productId);
-        if (data.status === 'success') {
-            setWCounter(data.length);
-            const loved = data.wishlist.map(element => element.product);
-            setIsLoved(loved);
-            toast.success("Product added to wishlist!");
-            getPrevValues()
-        } else if (data.status === 'deleted') {
-            setWCounter(data.length);
-            const loved = data.wishlist.map(element => element.product);
-            setIsLoved(loved);
-            toast.warning("Product removed from wishlist!");
+        onMutate: async (product) => {
+            await queryClient.cancelQueries(['cart'])
+
+            const previousCart = queryClient.getQueryData(['cart'])
+
+            queryClient.setQueryData(['cart'], (old) => ({
+                ...old,
+                items: [...(old?.items || []), product]
+            }))
+
+            return { previousCart }
+        },
+
+        onError: (err, product, context) => {
+            queryClient.setQueryData(['cart'], context.previousCart)
+        },
+        onSuccess: (data) => {
+            if (data?.status === "success") {
+                toast.success("Product added successfully!")
+            }
+
+            if (data?.status === "remove") {
+                toast.error("Product deleted successfully!")
+            }
+        },
+
+        onSettled: () => {
+            queryClient.invalidateQueries(['cart'])
+            setBtnLoading(true)
         }
-    }
+    })
+
+    const addProductToWishListMutation = useMutation({
+        mutationFn: addToWishList,
+
+        onMutate: async (product) => {
+            await queryClient.cancelQueries(['wishlist'])
+
+            const previousWishlist = queryClient.getQueryData(['wishlist'])
+
+            queryClient.setQueryData(['wishlist'], (old) => ({
+                ...old,
+                items: [...(old?.items || []), product]
+            }))
+
+            return { previousWishlist }
+        },
+
+        onError: (err, product, context) => {
+            queryClient.setQueryData(['wishlist'], context.previousWishlist)
+        },
+        onSuccess: (data) => {
+
+            if (data?.status === "success") {
+                toast.success("Product added successfully!")
+            }
+
+            if (data?.status === "deleted") {
+                toast.error("Product deleted successfully!")
+            }
+        },
+
+        onSettled: () => {
+            queryClient.invalidateQueries(['wishlist'])
+            setBtnLoading(true)
+        }
+    })
 
     // Star Rating Component
     const StarRating = ({ onRatingChange }) => {
@@ -185,7 +206,7 @@ export default function ProductDetails() {
                             </div>
                             <div>
                                 <i
-                                    onClick={() => addProductToWishList(data?.data?.product._id)}
+                                    onClick={() => addProductToWishListMutation.mutate(data?.data?.product._id)}
                                     className={`heart-icon mt-2 me-2 fs-4 icon-link fa-solid fa-heart ${isLoved.includes(data?.data?.product._id) ? 'text-danger' : ''}`}
                                 ></i>
                             </div>
@@ -230,7 +251,7 @@ export default function ProductDetails() {
                         </p>
                         <button
                             disabled={!btnLoading || data?.data?.product.countInStock === 0}
-                            onClick={() => addProductToCart(data?.data?.product._id)}
+                            onClick={() => addToCartMutation.mutate(data?.data?.product._id)}
                             className='icon btn bg-main w-100 border-secondary'
                         >
                             {inCart.includes(data?.data?.product._id) ? 'Remove from Cart' : 'Add To Cart'}

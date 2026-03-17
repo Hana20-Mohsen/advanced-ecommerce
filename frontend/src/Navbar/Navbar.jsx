@@ -5,11 +5,12 @@ import { NavLink } from 'react-router-dom'
 import { storeContext } from '../context/storeContext'
 import { WishListContext } from '../context/WishlistContext'
 import { useCartState } from "../hooks/useCartState.js";
+import { useWishlistState } from '../hooks/useWishlistState.js'
 export default function Navbar() {
   const {data , isLoading , error , count}=useCartState()
    let{Counter , getCart , setCounter} =   useContext(storeContext)
-   let {WCounter ,getFromWishList , setWCounter}=useContext(WishListContext)
-
+   let { getFromWishList , setWCounter}=useContext(WishListContext)
+const { isLoved , WCounter}=useWishlistState()
 // call get cart item function
 
 // new comment in navbar
@@ -77,8 +78,8 @@ useEffect(()=>{
                 </NavLink>
               </li>
            
-              <li>
-                                                                            {/* new , old : signin */}
+              <li> 
+                {/* new , old : signin */}
                 <NavLink style={{color:'white'}} className="nav-link  ms-2" to="/logout">Log Out </NavLink>
                
               </li>
