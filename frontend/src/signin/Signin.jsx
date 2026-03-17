@@ -138,9 +138,9 @@ export default function Signin() {
   });
 
   return (
-    <div className={styles.main}>
+    <div className={`d-flex justify-content-center align-items-center ${styles.main}`} >
       <div className="container ">
-        <div className="row align-items-center py-5 mt-5">
+        <div className="row align-items-center  ">
           {/* Logo Section */}
           <div className="col-md-6 text-center text-white mb-5">
             <img className="w-25 me-md-5" src={logoImg} alt="ElectroniXpress" />
