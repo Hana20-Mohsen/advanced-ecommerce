@@ -101,7 +101,7 @@ if(!values.phone){
   return (
     
     <div className={` d-flex justify-content-center align-items-center ${styles.main}`}>
-        <div className="container ">
+        <div className="container pt-5 pt-md-0">
           <div className="row align-items-center mt-5 py-5" >
              {/*//////////////////////////////////////////////////////////// start logo  /////////////////////////////////// */}
             <div className="col-md-6  text-center text-white mb-5">
