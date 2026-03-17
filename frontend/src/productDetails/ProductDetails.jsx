@@ -189,7 +189,7 @@ export default function ProductDetails() {
     if (isLoading) return <Loader />;
 
     return (
-        <div className='ProductDetails Dark-Color text-white h-100vh Details pt-5 mt-4'>
+        <div className='ProductDetails Dark-Color text-white min-vh-100 Details pt-5'>
             <div className='mt-5 ms-3'>
                 <Link to="/products"> <i className="fa-solid fa-circle-arrow-left main-color fs-1"></i></Link>
             </div>
