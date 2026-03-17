@@ -12,6 +12,10 @@ import { generateEncryption } from "../../../utilities/security/encryption.secur
             return next(new Error('pssword mismatch caonfirmation Password!!' , {cause:400}))
         }
         if(await User.findOne({email})){
+            return res.status(409).json({
+                status:`fail`,
+                message:'email Already exists!!'    
+            })
             return next(new Error('email Already exists!!' , {cause:409}))
         }
        
