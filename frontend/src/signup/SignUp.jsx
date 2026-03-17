@@ -102,7 +102,7 @@ if(!values.phone){
     
     <div className={` d-flex justify-content-center align-items-center ${styles.main}`}>
         <div className="container ">
-          <div className="row align-items-center " >
+          <div className="row align-items-center mt-3" >
              {/*//////////////////////////////////////////////////////////// start logo  /////////////////////////////////// */}
             <div className="col-md-6  text-center text-white mb-5">
               <img className='w-25 me-md-5 ' src={logoImg}alt="ElectroniXpress" />
