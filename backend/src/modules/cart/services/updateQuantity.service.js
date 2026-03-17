@@ -3,6 +3,8 @@ import Product from "../../../DB/models/Product.model.js";
 import { asyncHandler } from "../../../utilities/error/error.js";
 const updateQuantity = asyncHandler(async (req, res, next) => {
         const { operation } = req.body;
+        console.log(operation);
+        
         const productId = req.params.id;
         const userId = req.user._id;
 

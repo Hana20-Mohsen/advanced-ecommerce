@@ -81,10 +81,6 @@ const addToCartMutation = useMutation({
   onSettled: () => {
     queryClient.invalidateQueries(['cart'])
     setBtnLoading(true)
-  },
-
-  onSettled: () => {
-    queryClient.invalidateQueries(['cart'])
   }
 })
 async function addProductToCart(productId) {

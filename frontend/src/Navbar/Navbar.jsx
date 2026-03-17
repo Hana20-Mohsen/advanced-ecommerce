@@ -4,23 +4,14 @@ import styles from "./Navbar.module.css"
 import { NavLink } from 'react-router-dom'
 import { storeContext } from '../context/storeContext'
 import { WishListContext } from '../context/WishlistContext'
+import { useCartState } from "../hooks/useCartState.js";
 export default function Navbar() {
-
-
-
+  const {data , isLoading , error , count}=useCartState()
    let{Counter , getCart , setCounter} =   useContext(storeContext)
    let {WCounter ,getFromWishList , setWCounter}=useContext(WishListContext)
 
 // call get cart item function
-useEffect(()=>{
-  (async ()=>{
-    let data=await getCart()
-    // console.log(data);
-    // if(data.status=='success'){
-      // setCounter(data.numOfCartItems)
-    // }
-  })()
-},[])
+
 // new comment in navbar
 
 // call get wishlist item function
@@ -34,11 +25,11 @@ useEffect(()=>{
     setWCounter(wishlist.length)
    }
    
-   let cart= await getCart()
-   console.log(cart);
-   if(cart.status=='success'){
-    setCounter(cart.length)
-   }
+  //  let cart= await getCart()
+  //  console.log(cart);
+  //  if(cart.status=='success'){
+  //   setCounter(cart.length)
+  //  }
   })()
 })
 
@@ -79,8 +70,8 @@ useEffect(()=>{
               <li>
                 <NavLink style={{ color: 'white' }} to='/cart' className="btn  position-relative ms-3 mt-1">Cart
                 <i className={` ${styles.iconColor} mx-2 icon-link fa-solid fa-cart-shopping ms-2`}  ></i> 
-            {Counter?      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                { Counter}
+            {count?      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                { count}
                     <span className="visually-hidden">unread messages</span>
                   </span> :''}
                 </NavLink>

@@ -1,14 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient , useMutation } from "react-query";
 import { storeContext } from "../context/storeContext";
 import Loader from "../Loader/Loader";
 import EmptyCart from "../EmptyCart/EmptyCart";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import './cart.style.css'
-
+import { useCartState } from "../hooks/useCartState.js";
 export default function Cart() {
   const queryClient = useQueryClient();
+  const {data , isLoading , error }=useCartState()
   // get cart context
   let {
     getCart,
@@ -18,20 +19,69 @@ export default function Cart() {
     deleteCart,
     setInCart,
     addToCart,
+    // inCart
   } = useContext(storeContext);
   // let [Loading, setLoading] = useState(true);
 
   // const [data, setData] = useState([]);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["cart"],
-    queryFn: () => getCart(),
-    placeholderData: (prev) => prev,
-    staleTime: 30_000,
-  });
-
-
+  const deleteCartItemMutation = useMutation({
+    mutationFn: reomveCartItem,
+    onMutate: async (productId) => {
+      await queryClient.cancelQueries(['cart'])
+      const previousCart = queryClient.getQueryData(['cart'])
+  
+      queryClient.setQueryData(['cart'], (old) => ({
+        ...old,
+        items: old?.items?.filter(
+        (item) => item.product._id !== productId
+      )
+      }))
+  
+      return { previousCart }
+    },
+  
+    onError: (err, product, context) => {
+      queryClient.setQueryData(['cart'], context.previousCart)
+    },
+    onSuccess: (data) => {
+      if (data?.status === "success") {
+      toast.error("Product deleted successfully");
+      }
+    },
+  
+    onSettled: () => {
+      queryClient.invalidateQueries(['cart'])
+    }
+  })
+    const UpdateProductQuantityMutation = useMutation({
+    mutationFn: ({productId, operation})=>UpdateQuantity(productId, operation)
+    ,
+    onSuccess: (data) => {
+      if (data.status == "success") {
+      queryClient.invalidateQueries(["cart"]);
+      // setData(data);
+      // setCounter(data?.length);
+      toast.success("Product Updated successfully");
+    }
+    },
+  
+    onSettled: () => {
+      queryClient.invalidateQueries(['cart'])
+    }
+  })
+  const deleteCartMutation= useMutation({
+    mutationFn:deleteCart,
+    onSuccess:(data)=>{
+      if (data.status == "success") {
+      queryClient.invalidateQueries(["cart"]);
+      // setCounter(0);
+      // setInCart([])
+      toast.error("Cart Deleted successfully");
+    }
+    }
+  })
   const getImageUrl = (imagePath) => {
     if (!imagePath) return '/placeholder-image.jpg';
     // Check if it's already a full URL (for seeded data maybe)
@@ -40,62 +90,39 @@ export default function Cart() {
     return `${process.env.REACT_APP_BACKEND_URL}/uploads/${imagePath}`;
   };
 
-  // function to delete item from cart
-
-  // async function deleteCartItem(id) {
-  //   let data = await reomveCartItem(id);
-  //   // console.log(data);
-  //   if (data.status == "success") {
-  //     // setData(data);
-  //     queryClient.invalidateQueries(["cart"]);
-  //     setCounter(data?.length);
-  //     toast.error("Product deleted successfully");
-  //   }
-  // }
-  async function deleteCartItem(id) {
-    let data = await reomveCartItem(id);
-
-    if (data.status === "success") {
-      queryClient.invalidateQueries(["cart"]);
-
-      setInCart((prev) => prev.filter((productId) => productId !== id));
-
-      // setCounter(data?.length);
-      toast.error("Product deleted successfully");
-    }
-  }
-
   // function to Update item from cart
 
-  async function UpdateProductQuantity(id, operation) {
-    let data = await UpdateQuantity(id, operation);
-    console.log(data);
-    if (data.status == "success") {
-      queryClient.invalidateQueries(["cart"]);
-      // setData(data);
-      // setCounter(data?.length);
-      toast.success("Product Updated successfully");
-    }
-  }
+  // async function UpdateProductQuantity(id, operation) {
+  //   let data = await UpdateQuantity(id, operation);
+  //   console.log(data);
+  //   if (data.status == "success") {
+  //     queryClient.invalidateQueries(["cart"]);
+  //     // setData(data);
+  //     // setCounter(data?.length);
+  //     toast.success("Product Updated successfully");
+  //   }
+  // }
 
   // function to delete my cart
 
-  async function deleteMyCart() {
-    let data = await deleteCart();
-    // console.log(data);
-    if (data.status == "success") {
-      // setData(null);
-      queryClient.invalidateQueries(["cart"]);
-      setCounter(0);
-      setInCart([])
-      toast.error("Cart Deleted successfully");
-    }
-  }
+  // async function deleteMyCart() {
+  //   let data = await deleteCart();
+  //   // console.log(data);
+  //   if (data.status == "success") {
+  //     // setData(null);
+  //     queryClient.invalidateQueries(["cart"]);
+  //     setCounter(0);
+  //     setInCart([])
+  //     toast.error("Cart Deleted successfully");
+  //   }
+  // }
 
   // call get cart item function
   useEffect(() => {
-  setCounter(data?.length)
-  }, [data]);
+ 
+  
+  }, []);
+
   if (isLoading) return <Loader />;
   if (!data?.cartItems?.length) {
     return <EmptyCart />;
@@ -141,8 +168,10 @@ export default function Cart() {
                     Price: {item.product.price} EGP
                   </p>
                   <button
+                  disabled={deleteCartItemMutation.isPending}
                     onClick={() => {
-                      deleteCartItem(item.product._id);
+                      // deleteCartItem(item.product._id);
+                      deleteCartItemMutation.mutate(item.product._id)
                     }}
                     className="btn m-0 p-0 mt-2 text-white"
                   >
@@ -153,9 +182,10 @@ export default function Cart() {
                 <div className=" d-flex justify-content-end ">
                   <button
                     disabled={item.quantity >= item.product.countInStock}
-                    onClick={() => [
-                      UpdateProductQuantity(item.product._id, "+"),
-                    ]}
+                    onClick={() => {
+                      // UpdateProductQuantity(item.product._id, "+")
+                      UpdateProductQuantityMutation.mutate({productId:item.product._id, operation:"+"})
+                    }}
                     className="btn main-color-border text-white"
                   >
                     +
@@ -164,7 +194,8 @@ export default function Cart() {
                   <button
                     disabled={item.quantity <= 1}
                     onClick={() => {
-                      UpdateProductQuantity(item.product._id, "-");
+                      // UpdateProductQuantity(item.product._id, "-");
+                      UpdateProductQuantityMutation.mutate({productId:item.product._id, operation:"-"})
                     }}
                     className="btn main-color-border text-white"
                   >
@@ -222,7 +253,8 @@ export default function Cart() {
               <button
                 className="btn bg-danger  px-4"
                 onClick={() => {
-                  deleteMyCart();
+                  // deleteMyCart();
+                  deleteCartMutation.mutate()
                   setShowConfirm(false); // Hide confirmation after delete
                 }}
               >
