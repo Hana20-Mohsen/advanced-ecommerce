@@ -13,6 +13,8 @@ const sendEmail= asyncHandler(async({to='' , cc='' , bcc='', subject='E-commerce
     rejectUnauthorized:false
   }
 });
+console.log(`transporter : ` , transporter);
+
 
 // Wrap in an async IIFE so we can use await.
 (async () => {
@@ -26,6 +28,8 @@ const sendEmail= asyncHandler(async({to='' , cc='' , bcc='', subject='E-commerce
     html,
     attachments
   });
+  console.log(`info : ` , info);
+  
   return info
 })();
 })
