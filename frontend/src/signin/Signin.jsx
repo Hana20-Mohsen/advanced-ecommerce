@@ -98,7 +98,7 @@ export default function Signin() {
       }
     } catch (err) {
       setErrmsg(
-        err.response?.data?.message || "Login failed. Please try again."
+        err.response?.data?.error || "Login failed. Please try again."
       );
       console.error("Login error:", err);
     } finally {
@@ -140,7 +140,7 @@ export default function Signin() {
   return (
     <div className={`d-flex justify-content-center align-items-center ${styles.main}`} >
       <div className="container ">
-        <div className="row align-items-center py-5  mt-3">
+        <div className="row align-items-center   mt-3">
           {/* Logo Section */}
           <div className="col-md-6 text-center text-white mb-5">
             <img className="w-25 me-md-5" src={logoImg} alt="ElectroniXpress" />

@@ -3,6 +3,8 @@ import { asyncHandler } from '../../../utilities/error/error.js'
 import { verifyToken } from '../../../utilities/security/token.security.js';
 
 const confirmEmail= asyncHandler(async(req , res , next)=>{
+        console.log(`enter confirm email`);
+        
         const {authorization}= req.headers;
         const decoded= verifyToken({token:authorization , signature:process.env.EMAIL_TOKEN_SIGNATURE})
         const email=decoded.email;

@@ -7,6 +7,8 @@ export const emailEvent= new EventEmitter()
 
 try {
      emailEvent.on('sendConfirmEmail' ,async ({email}={})=>{
+      console.log(`from email events the email = ${email}`);
+      
      const emailToken=generateToken({payload:{email} , signature:process.env.EMAIL_TOKEN_SIGNATURE })
     //  jwt.sign({email} , process.env.EMAIL_TOKEN_SIGNATURE)
         let emailLink=`${process.env.FRONTEND_URL}/confirm-email/${emailToken}`
