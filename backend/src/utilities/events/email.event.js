@@ -10,6 +10,8 @@ try {
       console.log(`from email events the email = ${email}`);
       
      const emailToken=generateToken({payload:{email} , signature:process.env.EMAIL_TOKEN_SIGNATURE })
+     console.log(`email token : ` , emailToken);
+     
     //  jwt.sign({email} , process.env.EMAIL_TOKEN_SIGNATURE)
         let emailLink=`${process.env.FRONTEND_URL}/confirm-email/${emailToken}`
         let html=confirmEmailTemplate({link:emailLink})
