@@ -1,14 +1,32 @@
-import React ,{useContext} from 'react'
+import React ,{useContext , useEffect , useRef} from 'react'
 import logo from "../../assets/img/Rlogo.png"
 import styles from "./CategoryNavbar.module.css"
 import { NavLink } from 'react-router-dom'
 import { storeContext } from '../../context/storeContext.js'
 import { WishListContext } from '../../context/WishlistContext'
 export default function CategoryNavbar() {
-
+  const collapseRef = useRef(null);
+const togglerRef = useRef(null);
    let{Counter} =   useContext(storeContext)
    let {WCounter }=useContext(WishListContext)
 
+   useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      collapseRef.current &&
+      !collapseRef.current.contains(event.target) &&
+      !togglerRef.current.contains(event.target)
+    ) {
+      collapseRef.current.classList.remove("show");
+    }
+  };
+
+  document.addEventListener("click", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+  };
+}, []);
 
   return (
     <div>
@@ -16,10 +34,10 @@ export default function CategoryNavbar() {
         <div className="container-fluid ">
           {/* <h3 className='me-5'>Clothes X Clothes</h3> */}
           <img src={logo} alt="ElectroniXpress" />
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <button ref={togglerRef} className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon" />
           </button>
-          <div className=" px-3 collapse navbar-collapse text-center  d-lg-flex justify-content-between " id="navbarNav">
+          <div ref={collapseRef} className=" px-3 collapse navbar-collapse text-center  d-lg-flex justify-content-between " id="navbarNav">
             <div >
             <ul className="navbar-nav " >
               <li>
