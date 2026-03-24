@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken'
 
 export const generateToken=({payload={} , signature=process.env.TOKEN_SIGNATURE , options={}})=>{
+    console.log(`entered generateToken`);
+    
     console.log({payload , signature , options});
     
     const token = jwt.sign(payload , signature , options)
