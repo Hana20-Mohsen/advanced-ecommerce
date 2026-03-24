@@ -13,10 +13,10 @@ const updateOrder=asyncHandler(async(req , res , next)=>{
         }
         if(isPaid){
             orderToUpdate.paidAt=Date.now()
-            orderToUpdate.orderItems.forEach(async (item) => {
-            let product= await Product.findById(item.product)
-            await Product.findByIdAndUpdate(product._id , {countInStock:product.countInStock-item.quantity} , {new:true})
-        })
+        //     orderToUpdate.orderItems.forEach(async (item) => {
+        //     let product= await Product.findById(item.product)
+        //     await Product.findByIdAndUpdate(product._id , {countInStock:product.countInStock-item.quantity} , {new:true})
+        // })
         }
         else if(isDelivered){
             orderToUpdate.deliveredAt=Date.now()
