@@ -40,39 +40,69 @@
 
 // export default sendEmail
 
-import { Resend } from "resend";
+// import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// const resend = new Resend(process.env.RESEND_API_KEY);
 
-const sendEmail = async ({
-  to = '',
-  cc = '',
-  bcc = '',
-  subject = 'E-commerce app',
-  text = '',
-  html = '',
-  attachments = []
-} = {}) => {
+// const sendEmail = async ({
+//   to = '',
+//   cc = '',
+//   bcc = '',
+//   subject = 'E-commerce app',
+//   text = '',
+//   html = '',
+//   attachments = []
+// } = {}) => {
 
-  console.log("enter send EMAIL");
+//   console.log("enter send EMAIL");
 
+//   try {
+//     const response = await resend.emails.send({
+//       from: `"Hana mohsen" <${process.env.EMAIL}>`,
+//       to: Array.isArray(to) ? to : [to],
+//       cc: cc ? (Array.isArray(cc) ? cc : [cc]) : undefined,
+//       bcc: bcc ? (Array.isArray(bcc) ? bcc : [bcc]) : undefined,
+//       subject,
+//       html: html || `<p>${text}</p>`,
+//       attachments
+//     });
+
+//     console.log("Email sent:", response);
+
+//     return response;
+
+//   } catch (error) {
+//     console.log("Resend Error:", error);
+//     throw error;
+//   }
+// };
+
+// export default sendEmail;
+
+import SibApiV3Sdk from "sib-api-v3-sdk";
+
+const client = SibApiV3Sdk.ApiClient.instance;
+client.authentications["api-key"].apiKey = process.env.BREVO_API_KEY;
+
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+const sendEmail = async ({ to, subject, html }) => {
   try {
-    const response = await resend.emails.send({
-      from: `"Hana mohsen" <${process.env.EMAIL}>`,
-      to: Array.isArray(to) ? to : [to],
-      cc: cc ? (Array.isArray(cc) ? cc : [cc]) : undefined,
-      bcc: bcc ? (Array.isArray(bcc) ? bcc : [bcc]) : undefined,
+    const response = await apiInstance.sendTransacEmail({
+      sender: {
+        email: "hana2003mohsen@gmail.com", // can work without domain (testing)
+        name: "Hana Mohsen",
+      },
+      to: [{ email: to }],
       subject,
-      html: html || `<p>${text}</p>`,
-      attachments
+      htmlContent: html,
     });
 
     console.log("Email sent:", response);
-
     return response;
 
   } catch (error) {
-    console.log("Resend Error:", error);
+    console.error("Brevo Error:", error);
     throw error;
   }
 };

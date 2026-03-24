@@ -80,7 +80,7 @@ if(!values.phone){
   validate
   ,
   onSubmit:(values)=>{
-    console.log(values)
+    // console.log(values)
     //convert values to JSON then send to API
     sendDataToApi(values)
     // {isChecked? <AdminLayOut/> :<MainLayOut/>}
@@ -88,7 +88,7 @@ if(!values.phone){
  })
 
 
- console.log(Register.errors)
+//  console.log(Register.errors)
 // end formik
 
 
