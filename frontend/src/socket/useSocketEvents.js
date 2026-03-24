@@ -13,15 +13,15 @@ export default function useSocketEvents() {
       toast.dark("A product was added to cart");
     });
 
-    socket.on("product-stock-updated", (data) => {
-      console.log("Updated stock:", data);
+    // socket.on("product-stock-updated", (data) => {
+    //   console.log("Updated stock:", data);
 
-      data.products.forEach((product) => {
-        console.log(
-          `Product ${product._id} new quantity: ${product.countInStock}`
-        );
-      });
-    });
+    //   data.products.forEach((product) => {
+    //     console.log(
+    //       `Product ${product._id} new quantity: ${product.countInStock}`
+    //     );
+    //   });
+    // });
 
     return () => {
       socket.off("product-added-to-cart");

@@ -103,10 +103,6 @@ const createOrder = asyncHandler(async (req, res, next) => {
   });
 
   // 🔥 3. UPDATE STOCK (BEST WAY: bulkWrite)
-  // orderItems.forEach(async (item) => {
-  //   let product = await Product.findById(item.product)
-  //   await Product.findByIdAndUpdate(product._id, { countInStock: product.countInStock - item.quantity }, { new: true })
-  // })
 const bulkOps = orderItems.map((item) => ({
   updateOne: {
     filter: { _id: item.product._id },
@@ -117,18 +113,6 @@ const bulkOps = orderItems.map((item) => ({
 }));
 
 await Product.bulkWrite(bulkOps);
-  // const bulkOps = orderItems.map((item) => ({
-  //   updateOne: {
-  //     filter: { _id: item.product._id },
-  //     update: {
-  //       $inc: { quantity: -item.quantity },
-  //     },
-  //   },
-  // }));
-  // console.log(`bulkOps : ` , bulkOps);
-
-
-  // await Product.bulkWrite(bulkOps);
 
   // 🔄 4. GET UPDATED PRODUCTS (for socket)
   const updatedProducts = await Product.find({
