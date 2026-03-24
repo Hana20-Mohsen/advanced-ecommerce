@@ -18,10 +18,12 @@ const initSocket = (server) => {
   io.use((socket , next)=>{
 
  const token = socket.handshake.auth.token
+ console.log(`token from socket : ` , token);
+ 
 
  if(!token){
   return next(new Error("Authentication error"))
- }
+ } 
 
  try{
     
