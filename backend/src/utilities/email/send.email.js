@@ -41,7 +41,9 @@ import { asyncHandler } from "../error/error.js";
 
 // Create a test account or replace with real credentials.
 const sendEmail= async({to='' , cc='' , bcc='', subject='E-commerce app' , text='' , html='' , attachments=[]}={})=>{
-    const transporter = nodemailer.createTransport({
+  console.log(`enter send EMAIL`);
+    
+  const transporter = nodemailer.createTransport({
     service:'gmail',
   auth: {
     user: process.env.EMAIL,
