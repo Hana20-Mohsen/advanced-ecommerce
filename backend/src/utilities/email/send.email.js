@@ -51,7 +51,7 @@ const sendEmail= async({to='' , cc='' , bcc='', subject='E-commerce app' , text=
     rejectUnauthorized:false
   }
 });
-console.log(`transporter : ` , transporter);
+// console.log(`transporter : ` , transporter);
 
 
 // Wrap in an async IIFE so we can use await.
