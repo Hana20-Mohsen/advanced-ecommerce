@@ -90,7 +90,7 @@ const sendEmail = async ({ to, subject, html }) => {
   try {
     const response = await apiInstance.sendTransacEmail({
       sender: {
-        email: "hana2003mohsen@gmail.com", // can work without domain (testing)
+        email: "xShoes@gmail.com", // can work without domain (testing)
         name: "Hana Mohsen",
       },
       to: [{ email: to }],
