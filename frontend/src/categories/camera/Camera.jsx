@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useContext, useState, useEffect } from 'react'
-import { useQuery } from 'react-query'
+import { useQuery  , useQueryClient , useMutation } from 'react-query'
 import Loader from '../../Loader/Loader'
 import { Link, useParams } from 'react-router-dom'
 import { storeContext } from '../../context/storeContext.js'
@@ -8,12 +8,15 @@ import { toast } from 'react-toastify'
 import { WishListContext } from '../../context/WishlistContext'
 import CategoryNavbar from '../categoryNavbar/CategoryNavbar.jsx'
 import { useCartState } from '../../hooks/useCartState.js'
+import { useWishlistState } from '../../hooks/useWishlistState.js'
 
 
 export default function Camera() {
-  const { inCart, count } = useCartState()
+  const queryClient = useQueryClient();
+  const {data:cartData,  inCart, count } = useCartState()
+  const {data:wishlistData, isLoved}=useWishlistState()
   let { Counter, setCounter, addToCart, getCart, setInCart, setTotalPrice, setCartItems, cartItems } = useContext(storeContext)
-  let { addToWishList, setWCounter, removeWishItem, getFromWishList, isLoved, setIsLoved } = useContext(WishListContext)
+  let { addToWishList, setWCounter, removeWishItem, getFromWishList, setIsLoved } = useContext(WishListContext)
   let [btnLoading, setBtnLoading] = useState(true)
 
   const getImageUrl = (imagePath) => {
@@ -44,10 +47,80 @@ export default function Camera() {
   //     setCounter(cartItems.length)
 
   // }    
+  const addToCartMutation = useMutation({
+    mutationFn: addToCart,
+  
+    onMutate: async (product) => {
+      await queryClient.cancelQueries(['cart'])
+  
+      const previousCart = queryClient.getQueryData(['cart'])
+  
+      queryClient.setQueryData(['cart'], (old) => ({
+        ...old,
+        items: [...(old?.items || []), product]
+      }))
+  
+      return { previousCart }
+    },
+  
+    onError: (err, product, context) => {
+      queryClient.setQueryData(['cart'], context.previousCart)
+    },
+    onSuccess: (data) => {
+      if (data?.status === "success") {
+        toast.success("Product added successfully!")
+      }
+  
+      if (data?.status === "remove") {
+        toast.error("Product deleted successfully!")
+      }
+    },
+  
+    onSettled: () => {
+      queryClient.invalidateQueries(['cart'])
+      setBtnLoading(true)
+    }
+  })
+
+  const addProductToWishListMutation = useMutation({
+    mutationFn: addToWishList,
+  
+    onMutate: async (product) => {
+      await queryClient.cancelQueries(['wishlist'])
+  
+      const previousWishlist = queryClient.getQueryData(['wishlist'])
+  
+      queryClient.setQueryData(['wishlist'], (old) => ({
+        ...old,
+        items: [...(old?.items || []), product]
+      }))
+  
+      return { previousWishlist }
+    },
+  
+    onError: (err, product, context) => {
+      queryClient.setQueryData(['wishlist'], context.previousWishlist)
+    },
+    onSuccess: (data) => {
+  
+      if (data?.status === "success") {
+        toast.success("Product added successfully!")
+      }
+  
+      if (data?.status === "deleted") {
+        toast.error("Product deleted successfully!")
+      }
+    },
+  
+    onSettled: () => {
+      queryClient.invalidateQueries(['wishlist'])
+      setBtnLoading(true)
+    }
+  })
 
   useEffect(() => {
 
-  }, [inCart]);
+  }, [inCart , isLoved]);
 
 
   function getProducts() {
@@ -62,58 +135,58 @@ export default function Camera() {
   if (isLoading) return <Loader />
 
 
-  async function addProductToCart(productId) {
-    setBtnLoading(false)
-    let data = await addToCart(productId)
+  // async function addProductToCart(productId) {
+  //   setBtnLoading(false)
+  //   let data = await addToCart(productId)
 
 
-    if (data?.status == 'success') {
+  //   if (data?.status == 'success') {
 
-      let items = data.cartItems.map(element => element.product._id);
-      setInCart(items)
-      setCounter(data.length)
-      setBtnLoading(true)
-      toast.success("Product added successfully !")
-    }
-    else if (data?.status == 'remove') {
-      let items = data.cartItems.map(element => element.product._id);
-      setInCart(items)
-      setCounter(data.length)
-      setBtnLoading(true)
-      toast.error("Product deleted successfully !")
+  //     let items = data.cartItems.map(element => element.product._id);
+  //     setInCart(items)
+  //     setCounter(data.length)
+  //     setBtnLoading(true)
+  //     toast.success("Product added successfully !")
+  //   }
+  //   else if (data?.status == 'remove') {
+  //     let items = data.cartItems.map(element => element.product._id);
+  //     setInCart(items)
+  //     setCounter(data.length)
+  //     setBtnLoading(true)
+  //     toast.error("Product deleted successfully !")
 
-    }
-    setCartItems(data.cartItems)
-    setTotalPrice(data.totalPrice)
-
-
-  }
+  //   }
+  //   setCartItems(data.cartItems)
+  //   setTotalPrice(data.totalPrice)
 
 
-  async function addProductToWishList(productId) {
+  // }
 
 
-    let data = await addToWishList(productId)
-    console.log(data);
-    if (data.status == 'success') {
+  // async function addProductToWishList(productId) {
 
-      setWCounter(data.length)
-      console.log(data.wishlist);
-      const loved = data.wishlist.map(element => element);
-      setIsLoved(loved);
-      console.log(loved);
-      // setIsLoved(!isLoved);
-      toast.success("Product added successfully !")
-    }
-    else if (data.status == 'deleted') {
-      setWCounter(data.length)
-      const loved = data.wishlist.map(element => element);
-      setIsLoved(loved);
-      console.log(data.wishlist);
-      toast.warning("Product deleted successfully !")
 
-    }
-  }
+  //   let data = await addToWishList(productId)
+  //   console.log(data);
+  //   if (data.status == 'success') {
+
+  //     setWCounter(data.length)
+  //     console.log(data.wishlist);
+  //     const loved = data.wishlist.map(element => element);
+  //     setIsLoved(loved);
+  //     console.log(loved);
+  //     // setIsLoved(!isLoved);
+  //     toast.success("Product added successfully !")
+  //   }
+  //   else if (data.status == 'deleted') {
+  //     setWCounter(data.length)
+  //     const loved = data.wishlist.map(element => element);
+  //     setIsLoved(loved);
+  //     console.log(data.wishlist);
+  //     toast.warning("Product deleted successfully !")
+
+  //   }
+  // }
 
 
   return (
@@ -150,12 +223,12 @@ export default function Camera() {
                   </Link>
                   {/* end link to product details */}
                   <i className={`icon-link fa-solid fa-heart ms-2 mb-3 ${isLoved.includes(item._id) ? 'text-danger' : ''}`} onClick={() => {
-                    addProductToWishList(item._id)
+                    addProductToWishListMutation.mutate(item._id)
                   }}></i>
                   <p className={`fs-6 fw-semibold m-0 ${item.countInStock === 0 ? 'text-danger' : 'main-color'}`}>
                     {item.countInStock === 0 ? 'Not available' : `In Stock: ${item.countInStock}`}
                   </p>
-                  <button disabled={!btnLoading || item.countInStock === 0} onClick={() => addProductToCart(item._id)} className='btn bg-main w-100 '>
+                  <button disabled={!btnLoading || item.countInStock === 0} onClick={() =>addToCartMutation.mutate(item._id)} className='btn bg-main w-100 '>
                     {inCart.includes(item._id) ? ' Remove item' : 'Add To Cart'}
 
                   </button>

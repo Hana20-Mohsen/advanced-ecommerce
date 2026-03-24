@@ -10,12 +10,14 @@ import { toast } from 'react-toastify'
 import { WishListContext } from '../../context/WishlistContext'
 import CategoryNavbar from '../categoryNavbar/CategoryNavbar.jsx'
 import { useCartState } from '../../hooks/useCartState.js'
+import { useWishlistState } from '../../hooks/useWishlistState.js'
 
 
 export default function HeadPhones() {
 const { inCart , count}=useCartState()
+const {isLoved}=useWishlistState()
   let { setCartItems, setTotalPrice, Counter, setCounter, addToCart, getCart, setInCart } = useContext(storeContext)
-  let { addToWishList, setWCounter, removeWishItem, getFromWishList, isLoved, setIsLoved } = useContext(WishListContext)
+  let { addToWishList, setWCounter, removeWishItem, getFromWishList, setIsLoved } = useContext(WishListContext)
   let [btnLoading, setBtnLoading] = useState(true)
 
   const getImageUrl = (imagePath) => {
@@ -46,7 +48,7 @@ const { inCart , count}=useCartState()
     useEffect(() => {
 
 
-    }, [inCart]);
+    }, [inCart , isLoved]);
 
 
   function getProducts() {

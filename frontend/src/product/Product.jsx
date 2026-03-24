@@ -105,7 +105,7 @@ const addProductToWishListMutation = useMutation({
 
     useEffect(() => {
     
-    }, [inCart]);
+    }, [inCart , isLoved]);
 
   return (
     <>
