@@ -8,11 +8,12 @@ import { storeContext } from '../../context/storeContext.js'
 import { toast } from 'react-toastify'
 import { WishListContext } from '../../context/WishlistContext'
 import CategoryNavbar from '../categoryNavbar/CategoryNavbar.jsx'
+import { useCartState } from '../../hooks/useCartState.js'
 
 
 export default function Laptop() {
-
-   let {setCartItems,setTotalPrice, Counter ,setCounter , addToCart , getCart , inCart ,setInCart}=useContext(storeContext)
+  const { inCart , count}=useCartState()
+   let {setCartItems,setTotalPrice, Counter ,setCounter , addToCart , getCart  ,setInCart}=useContext(storeContext)
    let {addToWishList , setWCounter , removeWishItem ,getFromWishList ,isLoved ,setIsLoved }= useContext(WishListContext)
     let [btnLoading, setBtnLoading] = useState(true)
 
@@ -40,12 +41,9 @@ export default function Laptop() {
     
       // }    
 
-      //   useEffect(() => {
-      //     // هنا بتحطي الفانكشن اللي تشتغل مرة واحدة بس
-      //     getPrevValues()
-         
-         
-      //   }, []);
+        useEffect(() => {
+
+        }, [inCart]);
 
 
     function getProducts(){
