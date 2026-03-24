@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect , useRef  } from 'react'
 import logo from "../assets/img/Rlogo.png"
 import styles from "./Navbar.module.css"
 import { NavLink } from 'react-router-dom'
@@ -7,6 +7,8 @@ import { WishListContext } from '../context/WishlistContext'
 import { useCartState } from "../hooks/useCartState.js";
 import { useWishlistState } from '../hooks/useWishlistState.js'
 export default function Navbar() {
+  const collapseRef = useRef(null);
+const togglerRef = useRef(null);
   const {data , isLoading , error , count}=useCartState()
    let{Counter , getCart , setCounter} =   useContext(storeContext)
    let { getFromWishList , setWCounter}=useContext(WishListContext)
@@ -26,13 +28,28 @@ useEffect(()=>{
     setWCounter(wishlist.length)
    }
    
+   const handleClickOutside = (event) => {
+    if (
+      collapseRef.current &&
+      !collapseRef.current.contains(event.target) &&
+      !togglerRef.current.contains(event.target)
+    ) {
+      collapseRef.current.classList.remove("show");
+    }
+  };
+
+  document.addEventListener("click", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("click", handleClickOutside);
+  };
   //  let cart= await getCart()
   //  console.log(cart);
   //  if(cart.status=='success'){
   //   setCounter(cart.length)
   //  }
   })()
-})
+}, [])
 
   return (
     <>
@@ -40,10 +57,10 @@ useEffect(()=>{
         <div className="container-fluid ">
           {/* <h3 className='me-5'>Clothes X Clothes</h3> */}
           <img className={`${styles.custom_width}`} src={logo} alt="ElectroniXpress" />
-          <button className="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <button ref={togglerRef} className="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon " />
           </button>
-          <div className="collapse navbar-collapse text-center " id="navbarNav">
+          <div ref={collapseRef} className="collapse navbar-collapse text-center " id="navbarNav">
             <ul className="navbar-nav me-auto" >
               <li>
                 <NavLink style={{ color: 'white' }} className="nav-link mt-1" to="/Home">Home</NavLink>
