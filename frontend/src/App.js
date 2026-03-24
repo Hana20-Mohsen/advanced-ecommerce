@@ -35,8 +35,10 @@ import OrderList from './order/OrderList.js'
 import OrderDetails from './order/OrderDetails.js'
 import PlaceOrder from './order/PlaceOrder.js'
 import EmailConfirm from './signup/confirmEmail.jsx'
+import useSocketEvents from './socket/useSocketEvents.js'
 
 export default function App() {
+  useSocketEvents();
   useEffect(()=>{
 
  socket.on("connect",()=>{
