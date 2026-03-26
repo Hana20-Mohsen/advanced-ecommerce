@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import socket from "./socket";
 import { toast } from "react-toastify";
-import useUpdateProductStock from "./events/updateProductsQuantity.event.js";
-import useUpdateProduct from "./events/useUpdateProduct.js";
+// import useUpdateProductStock from "./events/updateProductsQuantity.event.js";
+
 export default function useSocketEvents() {
 
   // ✅ CALL HOOK HERE (top level)
-  useUpdateProductStock();
-  useUpdateProduct();
+//   useUpdateProductStock();
+
   useEffect(() => {
     socket.on("product-added-to-cart", (data) => {
       toast.dark("A product was added to cart");
@@ -26,7 +26,6 @@ export default function useSocketEvents() {
     return () => {
       socket.off("product-added-to-cart");
       socket.off("product-stock-updated"); // ✅ ADD THIS
-      socket.off("product-updated");
     };
   }, []);
 }
