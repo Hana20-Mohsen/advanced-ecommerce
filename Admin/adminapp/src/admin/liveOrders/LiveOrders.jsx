@@ -27,7 +27,7 @@ export default function LiveOrders() {
     const fetchOrders = async () => {
       try {
         const token = Cookies.get('token');
-        const response = await axios.get('http://localhost:8000/api/v1/order/getAll', {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/order/getAll`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -101,7 +101,7 @@ export default function LiveOrders() {
       
       const token = Cookies.get('token');
       const response = await axios.put(
-        `http://localhost:8000/api/v1/order/update/${currentOrder._id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/order/update/${currentOrder._id}`,
         { 
           status: values.status,
           isPaid: values.isPaid,

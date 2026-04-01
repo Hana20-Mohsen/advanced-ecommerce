@@ -19,7 +19,7 @@ export default function Products() {
   // Check if it's already a full URL (for seeded data maybe)
   if (imagePath.startsWith('http')) return imagePath;
   // Otherwise construct the proper URL
-  return `${process.env.REACT_APP_API_URL || 'http://localhost:8000'}/uploads/${imagePath}`;
+  return `${process.env.REACT_APP_API_URL}/uploads/${imagePath}`;
 };
   // Validation schema
   const productSchema = Yup.object().shape({

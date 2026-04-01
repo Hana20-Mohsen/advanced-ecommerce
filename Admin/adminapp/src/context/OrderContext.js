@@ -10,7 +10,7 @@ export  let orderContext=createContext(0)
   
     
          async function getOrder(orderId) {
-         return axios.get(`http://localhost:8000/api/v1/order/${orderId}`,{
+         return axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/order/${orderId}`,{
               headers:{
                 authorization:`Bearer ${Cookies.get('token')}`,
               }
@@ -20,7 +20,7 @@ export  let orderContext=createContext(0)
       
       async function updateOrder(updates , orderId = Cookies.get('orderId')) {
       //  let orderId= Cookies.get('orderId')
-         return axios.put(`http://localhost:8000/api/v1/order/update/${orderId}`,updates,{
+         return axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/v1/order/update/${orderId}`,updates,{
               headers:{
                 authorization:`Bearer ${Cookies.get('token')}`,
               }
