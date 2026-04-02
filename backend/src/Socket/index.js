@@ -21,9 +21,9 @@ const initSocket = (server) => {
  console.log(`token from socket : ` , token);
  
 
- if(!token){
-  return next(new Error("Authentication error"))
- } 
+//  if(!token){
+//   return next(new Error("Authentication error"))
+//  } 
 
  try{
     
