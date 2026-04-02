@@ -12,9 +12,9 @@ import BestSeller from './admin/bestSeller/BestSeller.jsx'
 import OrderDetails from './admin/orderDetails/OrderDetails.js'
 import OrderContextProvider from './context/OrderContext.js'
 import ProductDetails from './productDetails/ProductDetails.jsx'
-
+import useSocketEvents from './socket/useSocketEvents.js';
 export default function App() {
-
+    useSocketEvents();
   const routes = createBrowserRouter([
   { path: "/", element: <Admin /> },
   { path: "/admin", element: <Admin /> },
