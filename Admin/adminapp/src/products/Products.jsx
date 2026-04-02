@@ -111,7 +111,7 @@ export default function Products() {
         {productsItems?.map(item => (
 
           <div key={item._id} className="row border-bottom py-2 text-white">
-            {      console.log('Image path:', item.images[0], 'Full URL:', getImageUrl(item.images[0]))}
+            {/* {      console.log('Image path:', item.images[0], 'Full URL:', getImageUrl(item.images[0]))} */}
             <div className="col-md-1">
               <img className='w-100' src={getImageUrl(item.images?.[0])}  alt={item.name} />
             </div>
