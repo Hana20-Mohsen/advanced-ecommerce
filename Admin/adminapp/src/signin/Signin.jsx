@@ -1,0 +1,194 @@
+import React, { useState, useEffect } from "react";
+import styles from "./Signin.module.css";
+import logoImg from "../assets/img/ElecLogo.png";
+import { useFormik } from "formik";
+import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import socket from "../socket/socket";
+export default function Signin() {
+  const [isChecked, setIsChecked] = useState(false);
+  const [Errmsg, setErrmsg] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [formErrors, setFormErrors] = useState({});
+  const location = useLocation()
+  const navigate = useNavigate();
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+
+  useEffect(() => {
+    if (location.state?.message) {
+      console.log('message');
+
+      setTimeout(() => {
+        toast.warning(
+          location.state.message,
+          {
+            toastId: "email-confirm-toast",
+            autoClose: 10000,
+          }
+        );
+        navigate(location.pathname, { replace: true })
+      }, 500);
+    }
+    if (Object.keys(formErrors).length > 0) {
+      const timer = setTimeout(() => {
+        setFormErrors({});
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+    if (Errmsg) {
+      const timer = setTimeout(() => {
+        setErrmsg("");
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+
+  }, [location, navigate, formErrors, Errmsg])
+
+
+  async function sendDataToApi(values) {
+    try {
+      console.log("ENV URL:", process.env.REACT_APP_BACKEND_URL);
+      setLoading(false);
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/user/login`,
+        values
+      );
+      console.log(data);
+
+      if (data && data.token) {
+        socket.emit("join-user-room", data.id)
+        Cookies.set("token", data?.token, {
+          expires: 7,
+          path: "/",
+          secure: false
+
+        });
+        let token = Cookies.get('token')
+        console.log(token);
+
+        // Force a full page reload to ensure all application state is reset
+        // window.location.href = "/home";
+        navigate("/home");
+
+      }
+    } catch (err) {
+      setErrmsg(
+        err.response?.data?.error || "Login failed. Please try again."
+      );
+      console.error("Login error:", err);
+    } finally {
+      setLoading(true);
+    }
+  }
+
+  function validate(values) {
+    const errors = {};
+
+    if (!values.email) {
+      errors.email = "Email is required";
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+      errors.email = "Invalid email address";
+    }
+
+    if (!values.password) {
+      errors.password = "Password is required";
+    } else if (!/^[A-Z][a-zA-Z0-9]{6,}$/.test(values.password)) {
+      errors.password =
+        "Password must start with uppercase and be at least 7 characters";
+    }
+
+    setFormErrors(errors);
+    return errors;
+  }
+
+  const login = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validate,
+    onSubmit: (values) => {
+      sendDataToApi(values);
+    },
+  });
+
+  return (
+    <div className={`d-flex justify-content-center align-items-center ${styles.main}`} >
+      <div className="container ">
+        <div className="row align-items-center   mt-3">
+          {/* Logo Section */}
+          <div className="col-md-6 text-center text-white mb-5">
+            <img className="w-25 me-md-5" src={logoImg} alt="ElectroniXpress" />
+            <h2 className="mt-3 me-4">Clothes X Clothes</h2>
+            <span>helps you find all electronics you need</span>
+          </div>
+
+          {/* Login Form */}
+          <div
+            className={`${styles.MyForm} col-md-6 bg-black text-light p-4 mt-s-5 rounded-3`}
+          >
+            <h2 className="fw-light">Login Now</h2>
+
+            <form onSubmit={login.handleSubmit} className="my-4 text-center">
+              {/* Email Input */}
+              <input
+                onBlur={login.handleBlur}
+                value={login.values.email}
+                onChange={login.handleChange}
+                className={`${styles.MyInput
+                  } form-control Gray-Color rounded-5 ${formErrors.email ? "is-invalid" : ""
+                  }`}
+                type="text"
+                name="email"
+                id="Email"
+                placeholder="Email*"
+              />
+              {formErrors.email && login.touched.email && (
+                <div className="alert alert-danger">{formErrors.email}</div>
+              )}
+
+              {/* Password Input */}
+              <input
+                onBlur={login.handleBlur}
+                value={login.values.password}
+                onChange={login.handleChange}
+                className={`${styles.MyInput
+                  } form-control Gray-Color rounded-5 ${formErrors.password ? "is-invalid" : ""
+                  }`}
+                type="password"
+                name="password"
+                id="Password"
+                placeholder="Password*"
+              />
+              {formErrors.password && login.touched.password && (
+                <div className="alert alert-danger">{formErrors.password}</div>
+              )}
+
+              {/* Error Message */}
+              {Errmsg && <div className="alert alert-danger">{Errmsg}</div>}
+
+              {/* Submit Button */}
+              <button
+                disabled={!(login.dirty && login.isValid) || !loading}
+                type="submit"
+                className="btn bg-main text-secondary mt-3 form-control rounded-5"
+              >
+                {loading ? (
+                  "Sign In"
+                ) : (
+                  <i className="fa fa-spinner fa-spin main-color"></i>
+                )}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

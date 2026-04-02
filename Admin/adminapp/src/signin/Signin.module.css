@@ -1,0 +1,26 @@
+
+.main{
+    background-color:#121212 ;
+    height:100vh ;
+    overflow: auto;
+    /* height: 100%; */
+}
+.MyForm{
+    border: var(--mainColor) solid;
+    /* font-weight: lighter; */
+    
+}
+@media (max-width:575px) {
+    .MyForm{
+        width: 90% !important;
+        margin: auto;
+}
+}
+.MyInput{
+    border: none !important;
+  margin-bottom: 3%;
+
+}
+input:focus {
+    color: #ff0000;
+  }

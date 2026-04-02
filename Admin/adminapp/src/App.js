@@ -13,10 +13,11 @@ import OrderDetails from './admin/orderDetails/OrderDetails.js'
 import OrderContextProvider from './context/OrderContext.js'
 import ProductDetails from './productDetails/ProductDetails.jsx'
 import useSocketEvents from './socket/useSocketEvents.js';
+import Signin from './signin/Signin.jsx';
 export default function App() {
     useSocketEvents();
   const routes = createBrowserRouter([
-  { path: "/", element: <Admin /> },
+  { path: "/", element: <Signin /> },
   { path: "/admin", element: <Admin /> },
   { path: "/liveOrders", element: <LiveOrders /> },
   { path: "/bestSeller", element: <BestSeller /> },
