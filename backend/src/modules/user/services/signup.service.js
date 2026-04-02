@@ -25,6 +25,8 @@ const signup = asyncHandler(async (req, res, next) => {
     // emailEvent.emit('sendConfirmEmail' , {email})
     console.log("EMAIL:", process.env.EMAIL);
     console.log("PASS:", process.env.EMAIL_PASSWORD);
+    console.log("user:", user);
+    console.log(process.env.CONNECTION_STRING);
     const emailToken = generateToken({ payload: { email }, signature: process.env.EMAIL_TOKEN_SIGNATURE })
     console.log(`email token : `, emailToken);
     let emailLink = `${process.env.FRONTEND_URL}/confirm-email/${emailToken}`

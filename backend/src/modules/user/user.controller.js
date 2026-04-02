@@ -7,7 +7,7 @@ import updateProfile from "./services/updateProfile.service.js";
 import getProfileData from "./services/getProfileData.service.js";
 import changePassword from "./services/changePassword.service.js";
 import confirmEmail from "./services/confirmEmail.service.js";
-
+import getAllUsers from "./services/getAllUsers.service.js";
 
 const router=Router();
 router.post('/register' , signup)
@@ -16,4 +16,5 @@ router.post('/confirm-email' , confirmEmail)
 router.put('/update',authentication() , updateProfile)
 router.get('/profile',authentication() , getProfileData)
 router.put('/password',authentication() , changePassword)
+router.get('/all' , getAllUsers)
 export default router;

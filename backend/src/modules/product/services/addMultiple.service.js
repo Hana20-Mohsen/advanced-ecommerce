@@ -3,6 +3,8 @@ import { asyncHandler } from "../../../utilities/error/error.js";
 
 const addMultiple=asyncHandler(async (req , res , next)=>{
         const {data}=req.body;
+        console.log(data);
+        
       const done=  await Product.insertMany(data)
       if(!done){
         return next(new Error('data not inserted' , {cause:400}))

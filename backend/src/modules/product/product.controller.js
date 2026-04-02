@@ -12,6 +12,8 @@ import bestSeller from "./services/bestSeller.service.js";
 import { authentication , authorization  } from "../../middleware/auth.middleware.js";
 import { endpoint } from "../user/user.endpoint.js";
 import updateProduct from "./services/updateProduct.service.js";
+import deleteAllProducts from "./services/deleteAllProducts.services.js";
+import deleteProductsByCategoryId from "./services/deleteProductsByCategoryId.service.js";
 const router=Router();
 
 const storage = multer.diskStorage({
@@ -36,6 +38,8 @@ router.get('/:id' , GetByProductId)
 router.post('/multi' , addMultiple)
 router.delete('/:id' , deleteProduct)
 router.put('/update/:productId'  , updateProduct)
+router.delete('/delete/all' , deleteAllProducts)
+router.delete(`/delete/category/:id` , deleteProductsByCategoryId)
 
 export default router;
 

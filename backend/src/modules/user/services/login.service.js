@@ -6,6 +6,8 @@ import { generateToken } from "../../../utilities/security/token.security.js";
 import { getIO } from '../../../Socket/index.js';
 import { getSocketInstance } from "../../../Socket/socketManager.js";
 const login = asyncHandler(async (req, res, next) => {
+    console.log(process.env.CONNECTION_STRING);
+    
     const io = getSocketInstance()
     const { email, password } = req.body
     console.log({email , password});
