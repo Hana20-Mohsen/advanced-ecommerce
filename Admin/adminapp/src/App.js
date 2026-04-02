@@ -18,6 +18,7 @@ export default function App() {
     useSocketEvents();
   const routes = createBrowserRouter([
   { path: "/", element: <Signin /> },
+  { path: "/signin", element: <Signin /> },
   { path: "/admin", element: <Admin /> },
   { path: "/liveOrders", element: <LiveOrders /> },
   { path: "/bestSeller", element: <BestSeller /> },

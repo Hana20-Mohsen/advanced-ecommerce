@@ -61,7 +61,7 @@ export default function Signin() {
       );
       console.log(data);
 
-      if (data && data.token) {
+      if (data && data.token && data?.user?.name=="admin") {
         socket.emit("join-user-room", data.id)
         Cookies.set("token", data?.token, {
           expires: 7,
@@ -74,8 +74,11 @@ export default function Signin() {
 
         // Force a full page reload to ensure all application state is reset
         // window.location.href = "/home";
-        navigate("/home");
+        navigate("/admin");
 
+      }
+      else{
+        toast.error("unauthorized user");
       }
     } catch (err) {
       setErrmsg(
