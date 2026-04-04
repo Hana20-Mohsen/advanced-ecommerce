@@ -3,6 +3,8 @@ import { asyncHandler } from "../../../utilities/error/error.js";
 import { getSocketInstance } from "../../../Socket/socketManager.js";
 const deleteProduct=asyncHandler(async(req , res , next)=>{
         const io= getSocketInstance();
+        console.log(`io : ` , io);
+        
         const productId=req.params.id;
         const searchProduct=await Product.findByIdAndDelete(productId)
         if(!searchProduct){
