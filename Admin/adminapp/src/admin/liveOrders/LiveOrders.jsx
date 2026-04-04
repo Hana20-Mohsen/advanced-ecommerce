@@ -24,30 +24,30 @@ export default function LiveOrders() {
     isDelivered: Yup.boolean().required()
   });
 
-    const fetchOrders = async () => {
-      try {
-        const token = Cookies.get('token');
-        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/order/getAll`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        
-        if (response.data.status === 'success') {
-          setOrders(response.data.orders);
-        } else {
-          setError('Failed to fetch orders');
-        }
-      } catch (err) {
-        setError(err.response?.data?.message || 'Error fetching orders');
-        toast.error(err.response?.data?.message || 'Error fetching orders');
-      } finally {
-        setLoading(false);
+  const fetchOrders = async () => {
+    try {
+      const token = Cookies.get('token');
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/order/getAll`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.data.status === 'success') {
+        setOrders(response.data.orders);
+      } else {
+        setError('Failed to fetch orders');
       }
-    };
+    } catch (err) {
+      setError(err.response?.data?.message || 'Error fetching orders');
+      toast.error(err.response?.data?.message || 'Error fetching orders');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-  
+
 
     fetchOrders();
   }, []);
@@ -85,7 +85,7 @@ export default function LiveOrders() {
 
   const handleEditClick = (order) => {
     console.log(order);
-    
+
     setCurrentOrder(order);
     setShowEditModal(true);
   };
@@ -98,11 +98,11 @@ export default function LiveOrders() {
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       console.log(currentOrder);
-      
+
       const token = Cookies.get('token');
       const response = await axios.put(
         `${process.env.REACT_APP_BACKEND_URL}/api/v1/order/update/${currentOrder._id}`,
-        { 
+        {
           status: values.status,
           isPaid: values.isPaid,
           isDelivered: values.isDelivered
@@ -114,18 +114,18 @@ export default function LiveOrders() {
         }
       );
       console.log(response);
-      
+
 
       if (response.data.status === 'success') {
         toast.success('Order updated successfully');
         console.log(orders);
-        
-        setOrders(orders.map(order => 
+
+        setOrders(orders.map(order =>
           order._id === currentOrder._id ? response.data.data : order
         ));
         handleCloseEditModal();
         fetchOrders()
-        
+
       }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Error updating order');
@@ -153,21 +153,21 @@ export default function LiveOrders() {
   }
 
   return (
-    <div className='bg-dark'>
-       <Link to="/admin" className="text-decoration-none">
-            <i className="fa-solid fa-circle-arrow-left fs-2 main-color position-fixed"></i>
-          </Link>
+    <div className='bg-dark min-vh-100'>
+      <Link to="/admin" className="text-decoration-none">
+        <i className="fa-solid fa-circle-arrow-left fs-2 main-color position-fixed"></i>
+      </Link>
       <div className="container pt-5">
-        
+
         <div className="d-flex justify-content-between align-items-center mb-4">
-         
-          <h2 className="text-center mb-0 text-white">Live Orders</h2>
+
+          <h2 className="text-center mb-0 mt-5 text-white">Live Orders</h2>
           <div style={{ width: '32px' }}></div>
         </div>
 
-        <div className="table-responsive">
-          <table className="table table-striped table-hover">
-            <thead className="table-dark">
+        <div className="table-responsive   ">
+          <table className="table table-striped table-hover d-none d-lg-block ">
+            <thead className="table-dark ">
               <tr>
                 <th>Order ID</th>
                 <th>Customer</th>
@@ -198,7 +198,7 @@ export default function LiveOrders() {
                       </Link>
                     </td>
                     <td>
-                      <button 
+                      <button
                         className="btn btn-sm btn-primary"
                         onClick={() => handleEditClick(order)}
                       >
@@ -216,8 +216,43 @@ export default function LiveOrders() {
               )}
             </tbody>
           </table>
+          
         </div>
+        <div>
+          <div className="d-lg-none">
+            {orders.map((order) => (
+              <div key={order._id} className="card mb-3 shadow-sm">
+                <div className="card-body">
+                  <h6 className="fw-bold mb-2">
+                    #{order._id.substring(0, 8)}...
+                  </h6>
 
+                  <p className="mb-1"><strong>Customer:</strong> {order.user?.name || 'Guest'}</p>
+                  <p className="mb-1"><strong>Date:</strong> {formatDate(order.createdAt)}</p>
+                  <p className="mb-1"><strong>Items:</strong> {order.orderItems.length}</p>
+                  <p className="mb-1"><strong>Total:</strong> ${order.totalPrice.toFixed(2)}</p>
+                  <p className="mb-2"><strong>Status:</strong> {getStatusBadge(order.status)}</p>
+
+                  <div className="d-flex gap-2">
+                    <Link
+                      to={`/order/${order._id}`}
+                      className="btn btn-sm btn-outline-dark w-50"
+                    >
+                      View
+                    </Link>
+
+                    <button
+                      className="btn btn-sm btn-primary w-50"
+                      onClick={() => handleEditClick(order)}
+                    >
+                      Edit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
         {/* Edit Order Modal */}
         {showEditModal && (
           <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
@@ -254,19 +289,19 @@ export default function LiveOrders() {
                             <label className="form-label">Payment Status</label>
                             <div className="d-flex gap-4">
                               <label className="d-flex align-items-center gap-2">
-                                <Field 
-                                  type="radio" 
-                                  name="isPaid" 
-                                  value="true" 
+                                <Field
+                                  type="radio"
+                                  name="isPaid"
+                                  value="true"
                                   className="form-check-input"
                                 />
                                 Paid
                               </label>
                               <label className="d-flex align-items-center gap-2">
-                                <Field 
-                                  type="radio" 
-                                  name="isPaid" 
-                                  value="false" 
+                                <Field
+                                  type="radio"
+                                  name="isPaid"
+                                  value="false"
                                   className="form-check-input"
                                 />
                                 Not Paid
@@ -278,19 +313,19 @@ export default function LiveOrders() {
                             <label className="form-label">Delivery Status</label>
                             <div className="d-flex gap-4">
                               <label className="d-flex align-items-center gap-2">
-                                <Field 
-                                  type="radio" 
-                                  name="isDelivered" 
-                                  value="true" 
+                                <Field
+                                  type="radio"
+                                  name="isDelivered"
+                                  value="true"
                                   className="form-check-input"
                                 />
                                 Delivered
                               </label>
                               <label className="d-flex align-items-center gap-2">
-                                <Field 
-                                  type="radio" 
-                                  name="isDelivered" 
-                                  value="false" 
+                                <Field
+                                  type="radio"
+                                  name="isDelivered"
+                                  value="false"
                                   className="form-check-input"
                                 />
                                 Not Delivered
@@ -299,16 +334,16 @@ export default function LiveOrders() {
                           </div>
 
                           <div className="d-flex justify-content-end">
-                            <button 
-                              type="button" 
-                              className="btn btn-secondary me-2" 
+                            <button
+                              type="button"
+                              className="btn btn-secondary me-2"
                               onClick={handleCloseEditModal}
                             >
                               Cancel
                             </button>
-                            <button 
-                              type="submit" 
-                              className="btn btn-primary" 
+                            <button
+                              type="submit"
+                              className="btn btn-primary"
                               disabled={isSubmitting}
                             >
                               {isSubmitting ? 'Saving...' : 'Save Changes'}
