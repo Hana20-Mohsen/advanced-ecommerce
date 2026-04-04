@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import socket from "./socket.js";
 import { toast } from "react-toastify";
 import useUpdateProduct from "./events/useUpdateProduct.js";
+import useAddProduct from "./events/useAddProduct.js";
 // import useUpdateProductStock from "./events/updateProductsQuantity.event.js";
 
 export default function useSocketEvents() {
@@ -9,6 +10,7 @@ export default function useSocketEvents() {
   // ✅ CALL HOOK HERE (top level)
 //   useUpdateProductStock();
 useUpdateProduct()
+useAddProduct()
   useEffect(() => {
     socket.on("product-added-to-cart", (data) => {
       toast.dark("A product was added to cart");
