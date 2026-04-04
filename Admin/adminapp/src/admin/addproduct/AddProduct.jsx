@@ -116,7 +116,7 @@ export default function AddProduct() {
   console.log(Register.errors);
   // end formik
   return (
-    <div className="bg-blackAndGray mt-5 py-5">
+    <div className="bg-blackAndGray py-5 min-vh-100">
       <Link to="/manageProducts">
         {" "}
         <i className="fa-solid fa-circle-arrow-left main-color fs-2 ms-4"></i>
