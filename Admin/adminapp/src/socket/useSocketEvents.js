@@ -12,7 +12,7 @@ export default function useSocketEvents() {
 //   useUpdateProductStock();
 useUpdateProduct()
 useAddProduct()
-useDeleteProduct()
+// useDeleteProduct()
   useEffect(() => {
     socket.on("product-added-to-cart", (data) => {
       toast.dark("A product was added to cart");
