@@ -8,10 +8,11 @@ const useAddProduct =()=>{
         socket.on("add-product" , (newProduct)=>{
             console.log("Socket received:", newProduct);
             toast.dark(`admin add product`)
-            queryClient.setQueryData(['getProducts'] , (oldData)=>{
-                if(!oldData) return newProduct;
-                return [newProduct, ...oldData];
-            });
+             queryClient.invalidateQueries(['getProducts'])
+            // queryClient.setQueryData(['getProducts'] , (oldData)=>{
+            //     if(!oldData) return newProduct;
+            //     return [newProduct, ...oldData];
+            // });
         });
         return ()=>{
             socket.off("add-product");
