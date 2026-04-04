@@ -11,7 +11,7 @@ const useDeleteProduct = () => {
             toast.dark(`admin delete product`)
             // queryClient.invalidateQueries(['getProducts'])
             queryClient.setQueryData(['getProducts'], (old) =>{
-                  console.log(old);
+                  console.log(' old data:', old);
                 
                 old?.filter(p => p._id !== deletedProduct)
             }
