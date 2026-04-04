@@ -31,8 +31,6 @@ export default function useSocketEvents() {
       socket.off("product-added-to-cart");
       socket.off("product-stock-updated"); // ✅ ADD THIS
       socket.off("product-updated");
-      socket.off("add-product");
-      socket.off("delete-product");
     };
   }, []);
 }
