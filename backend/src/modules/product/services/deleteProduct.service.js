@@ -1,14 +1,15 @@
 import Product from "../../../DB/models/Product.model.js";
 import { asyncHandler } from "../../../utilities/error/error.js";
-
+import { getSocketInstance } from "../../../Socket/socketManager.js";
 const deleteProduct=asyncHandler(async(req , res , next)=>{
+        const io= getSocketInstance();
         const productId=req.params.id;
         const searchProduct=await Product.findByIdAndDelete(productId)
         if(!searchProduct){
              return next(new Error('product not found' , {cause:404}))
         }
         const products= await Product.find();
-
+        io.emit('delete-product' , searchProduct._id)
         return res.status(200).json({status:'success' ,products , length:products.length})
 })
 
