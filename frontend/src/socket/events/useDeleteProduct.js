@@ -13,7 +13,7 @@ const useDeleteProduct = () => {
             queryClient.setQueryData(['getProducts'], (old) =>{
                   console.log(' old data:', old);
                 
-                old?.filter(p => p._id !== deletedProduct)
+                // old?.filter(p => p._id !== deletedProduct)
             }
             );
         });
