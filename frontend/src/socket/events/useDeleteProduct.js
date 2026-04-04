@@ -10,11 +10,12 @@ const useDeleteProduct = () => {
             console.log("Socket received:", deletedProduct);
             toast.dark(`admin delete product`)
             // queryClient.invalidateQueries(['getProducts'])
-            queryClient.setQueryData(['getProducts'], (old) =>{
+            const data = queryClient.getQueryData(['getProducts']);
+            console.log("CACHE DATA:", data);
+            queryClient.setQueryData(['getProducts'], (old) => {
                 //   console.log(' old data:', old);
-                const data = queryClient.getQueryData(['getProducts']);
-console.log("CACHE DATA:", data);
-                
+
+
                 // old?.filter(p => p._id !== deletedProduct)
             }
             );
