@@ -9,10 +9,10 @@ const useDeleteProduct = () => {
         socket.on("delete-product", (deletedProduct) => {
             console.log("Socket received:", deletedProduct);
             toast.dark(`admin delete product`)
-            queryClient.invalidateQueries(['getProducts'])
-            // queryClient.setQueryData(['getProducts'], (old) =>
-            //     old?.filter(p => p._id !== deletedProduct)
-            // );
+            // queryClient.invalidateQueries(['getProducts'])
+            queryClient.setQueryData(['getProducts'], (old) =>
+                old?.filter(p => p._id !== deletedProduct)
+            );
         });
         return () => {
             socket.off("delete-product");
