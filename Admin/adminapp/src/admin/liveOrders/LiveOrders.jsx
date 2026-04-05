@@ -221,8 +221,8 @@ export default function LiveOrders() {
         <div>
           <div className="d-lg-none">
             {orders.map((order) => (
-              <div key={order._id} className="card mb-3 shadow-sm">
-                <div className="card-body">
+              <div key={order._id} className="card mb-3 shadow-sm bg-black text-white main-color-border">
+                <div className="card-body ">
                   <h6 className="fw-bold mb-2">
                     #{order._id.substring(0, 8)}...
                   </h6>
@@ -236,13 +236,13 @@ export default function LiveOrders() {
                   <div className="d-flex gap-2">
                     <Link
                       to={`/order/${order._id}`}
-                      className="btn btn-sm btn-outline-dark w-50"
+                      className="btn btn-sm btn-outline-dark w-50 text-white"
                     >
                       View
                     </Link>
 
                     <button
-                      className="btn btn-sm btn-primary w-50"
+                      className="btn btn-sm btn-primary bg-main w-50 text-dark"
                       onClick={() => handleEditClick(order)}
                     >
                       Edit
@@ -309,7 +309,7 @@ export default function LiveOrders() {
                             </div>
                           </div>
 
-                          <div className="mb-3">
+                          {/* <div className="mb-3">
                             <label className="form-label">Delivery Status</label>
                             <div className="d-flex gap-4">
                               <label className="d-flex align-items-center gap-2">
@@ -331,7 +331,7 @@ export default function LiveOrders() {
                                 Not Delivered
                               </label>
                             </div>
-                          </div>
+                          </div> */}
 
                           <div className="d-flex justify-content-end">
                             <button

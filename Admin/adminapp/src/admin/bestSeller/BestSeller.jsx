@@ -62,12 +62,12 @@ export default function BestSeller() {
         {/* 📱 Mobile Cards */}
         <div className="d-md-none">
           {bestSellers.map((item, index) => (
-            <div key={index} className="card mb-3 shadow-sm border-0 rounded-4">
-              <div className="card-body text-dark">
+            <div key={index} className="card mb-3 shadow-sm border-0 rounded-4 bg-black text-white"> 
+              <div className="card-body text-white">
                 <h6 className="fw-bold mb-2">
                   Product ID:
                 </h6>
-                <p className="mb-2 small text-muted">
+                <p className="mb-2 small text-light">
                   {item.productId}
                 </p>
 
