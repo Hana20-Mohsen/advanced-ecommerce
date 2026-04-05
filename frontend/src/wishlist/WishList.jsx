@@ -79,19 +79,19 @@ export default function WishList() {
   }, []);
   // if (isLoading) return <Loader />;
   return (
-    <div className='Dark-Color text-white py-5'>
-      <div className=' mt-5 pt-4  ms-5'>
+    <div className='mainSlider_bg min-vh-100 text-white py-5'>
+      <div className=' mt-5 pt-4  ms-3 ms-md-5'>
         <Link to="/products"> <i className="fa-solid fa-circle-arrow-left main-color fs-1  "></i></Link>
       </div>
-      <div className="container mt-3 mainSlider_bg py-3">
+      <div className="container">
 
         <h2 className='mt-3'>Wish List :</h2>
         {data?.wishlistItems?.map((item, index) => {
-          return <div key={index} className=" d-md-flex justify-content-between border-bottom py-2">
-            <Link className='row un-underline gap-0' to={'/product-details/' + item._id}>
+          return <div key={index} className=" d-md-flex justify-content-between mb-3 p-2 main-color-border rounded-3">
+            <Link className='row un-underline gap-0  ' to={'/product-details/' + item._id}>
               <div className="col-4 col-md-2">
                 {/* `http://localhost:3000/uploads/${}` */}
-                <img className='w-100' src={getImageUrl(item.images[0])} alt="" />
+                <img className='w-50' src={getImageUrl(item.images[0])} alt="" />
               </div>
               <div className="col-8 col-md-10 d-flex justify-content-between align-items-center">
                 <div className='px-4'>

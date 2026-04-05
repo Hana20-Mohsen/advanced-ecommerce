@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useQuery , useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { storeContext } from '../context/storeContext';
 import { orderContext } from '../context/OrderContext.js';
 import { toast } from 'react-toastify';
@@ -7,12 +7,12 @@ import { Link, useNavigate } from 'react-router-dom';
 
 export default function PlaceOrder() {
   const queryClient = useQueryClient();
-  let [subPrice , setSubtotal]=useState(0)
-   let [shipping , setShipping]=useState(0)
-   let [tax , setTax]=useState(0)
-    let [total , setTotal]=useState(0)
- 
-  const { getCart, deleteCart, cartItems, setCartItems  , setCounter , setInCart} = useContext(storeContext);
+  let [subPrice, setSubtotal] = useState(0)
+  let [shipping, setShipping] = useState(0)
+  let [tax, setTax] = useState(0)
+  let [total, setTotal] = useState(0)
+
+  const { getCart, deleteCart, cartItems, setCartItems, setCounter, setInCart } = useContext(storeContext);
   const { createOrder, getOrderById, orders, setOrders, loading, setLoading, error, setError, getOrderPrices } = useContext(orderContext)
   const navigate = useNavigate();
   const [shippingAddress, setshippingAddress] = useState({
@@ -31,12 +31,12 @@ export default function PlaceOrder() {
     console.log(data);
     console.log(cartItems);
 
-    const { subtotal, shippingPrice, taxPrice ,totalPrice} = await getOrderPrices()
+    const { subtotal, shippingPrice, taxPrice, totalPrice } = await getOrderPrices()
     setSubtotal(subtotal)
     setShipping(shippingPrice)
     setTax(taxPrice)
     setTotal(totalPrice)
-    console.log(subtotal + '  ' + shippingPrice + '  ' + taxPrice +'  '+totalPrice);
+    console.log(subtotal + '  ' + shippingPrice + '  ' + taxPrice + '  ' + totalPrice);
 
 
   }
@@ -50,15 +50,15 @@ export default function PlaceOrder() {
   }, []);
 
   const handleChange = (e) => {
-  setshippingAddress({ ...shippingAddress, [e.target.name]: e.target.value });
-};
+    setshippingAddress({ ...shippingAddress, [e.target.name]: e.target.value });
+  };
   const handlePaymentMethodChange = (e) => {
-  setPaymentMethod(e.target.value);
-};
+    setPaymentMethod(e.target.value);
+  };
 
   const placeOrderHandler = async () => {
-   console.log("Submitting:", { shippingAddress, paymentMethod });
-    
+    console.log("Submitting:", { shippingAddress, paymentMethod });
+
     setLoading(true);
     try {
       const orderData = {
@@ -67,12 +67,10 @@ export default function PlaceOrder() {
       };
 
       const data = await createOrder(orderData);
- console.log(data);
- 
+      console.log(data);
+
 
       if (data.status === 'success') {
-        console.log('im succccessssssssss');
-        
         await deleteCart();
         setCartItems([])
         // new line
@@ -83,12 +81,12 @@ export default function PlaceOrder() {
         toast.success('Order placed successfully!');
         navigate(`/order/${data.createdOrder._id}`);
       }
-      else{
+      else {
         toast.warning('please enter valid data!!');
       }
     } catch (error) {
       console.log(error);
-      
+
       toast.error(error.response?.data?.message || 'Failed to place order');
     } finally {
       setLoading(false);
@@ -108,99 +106,110 @@ export default function PlaceOrder() {
 
   return (
     <div className="Dark-Color text-white py-5 ">
-      <div className="container pt-5">
-        <div className="row">
-          <div className="col-md-8">
-            <h2>Shipping Information</h2>
-            <div className="card Dark-Color border-main mb-4">
-              <div className="card-body text-white">
-                <div className="form-group mb-3">
-                  <label>Address</label>
-                  <input
-                    type="text"
-                    className="form-control Gray-Color text-black"
-                    name="address"
-                    value={shippingAddress.address}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="form-group mb-3">
-                      <label>City</label>
-                      <input
-                        type="text"
-                        className="form-control Gray-Color text-black"
-                        name="city"
-                        value={shippingAddress.city}
-                        onChange={handleChange}
-                        required
-                      />
+      <div className="px-3 pt-5">
+        <div className=" d-flex flex-column flex-md-row  justify-content-between justify-content-lg-center gap-lg-5 w-100 ">
+            <div className=" order-2 order-md-1 mt-5">
+              <h2>Shipping Information</h2>
+              <div className="card bg-dark  mb-4 main-color-border">
+                <div className="card-body text-white">
+                  <div className="form-group mb-3">
+                    <label>Address</label>
+                    <input
+                      type="text"
+                      className="form-control Gray-Color text-black"
+                      name="address"
+                      value={shippingAddress.address}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="form-group mb-3">
+                        <label>City</label>
+                        <input
+                          type="text"
+                          className="form-control Gray-Color text-black"
+                          name="city"
+                          value={shippingAddress.city}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                      <div className="form-group mb-3">
+                        <label>country</label>
+                        <input
+                          type="text"
+                          className="form-control Gray-Color text-black"
+                          name="country"
+                          value={shippingAddress.country}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
                     </div>
-                    <div className="form-group mb-3">
-                      <label>country</label>
-                      <input
-                        type="text"
-                        className="form-control Gray-Color text-black"
-                        name="country"
-                        value={shippingAddress.country}
-                        onChange={handleChange}
-                        required
-                      />
+                    <div className="col-md-6">
+                      <div className="form-group mb-3">
+                        <label>Postal Code</label>
+                        <input
+                          type="text"
+                          className="form-control Gray-Color text-black"
+                          name="postalCode"
+                          value={shippingAddress.postalCode}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className="col-md-6">
-                    <div className="form-group mb-3">
-                      <label>Postal Code</label>
-                      <input
-                        type="text"
-                        className="form-control Gray-Color text-black"
-                        name="postalCode"
-                        value={shippingAddress.postalCode}
-                        onChange={handleChange}
-                        required
-                      />
+                  <div className="form-group mb-3">
+                    <label>Phone Number</label>
+                    <input
+                      type="text"
+                      className="form-control Gray-Color text-black"
+                      name="phone"
+                      value={shippingAddress.phone}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="form-group mb-3">
+                    <label>Payment Method</label>
+                    <select
+                      className="form-control Gray-Color"
+                      name="paymentMethod"
+                      value={paymentMethod}
+                      onChange={handlePaymentMethodChange}
+                    >
+                      <option value="CashOnDelivery">Cash on Delivery</option>
+                      <option value="PayPal">PayPal</option>
+                    </select>
+                  </div>
+                  <div className='d-flex justify-content-between '>
+                    <div>
+                      <button
+                        className="btn bg-main text-white py-2 px-5"
+                        onClick={placeOrderHandler}
+                        disabled={loading}
+                      >
+                        {loading ? 'Processing...' : 'Place Order'}
+                      </button>
+                    </div>
+                    <div>
+                      <Link
+                        to="/cart"
+                        className={`btn text-white bg-main py-2 px-3 `}
+                      >
+                        Cancel
+                      </Link>
                     </div>
                   </div>
-                </div>
-                <div className="form-group mb-3">
-                  <label>Phone Number</label>
-                  <input
-                    type="text"
-                    className="form-control Gray-Color text-black"
-                    name="phone"
-                    value={shippingAddress.phone}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div className="form-group mb-3">
-                  <label>Payment Method</label>
-                  <select
-                    className="form-control Gray-Color"
-                    name="paymentMethod"
-                    value={paymentMethod}
-                    onChange={handlePaymentMethodChange}
-                  >
-                    <option value="CashOnDelivery">Cash on Delivery</option>
-                    <option value="PayPal">PayPal</option>
-                  </select>
-                </div>
-                <div>
-                    <Link 
-                  to="/cart" 
-                  className={`btn text-white bg-main mt-3 mb-3 me-3  `}
-                >
-                  Cancel
-                </Link>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-4 text-white">
+          <div className="order-1 text-white mt-5">
             <h2>Order Summary</h2>
-            <div className="card Dark-Color border-main">
+            <div className="card bg-dark main-color-border">
               <div className="card-body text-white">
                 <div className="d-flex justify-content-between mb-2">
                   <span>Subtotal:</span>
@@ -224,13 +233,7 @@ export default function PlaceOrder() {
                     {/* {Number(cart.totalPrice + 50 + cart.totalPrice * 0.14).toLocaleString()} EGP */}
                   </strong>
                 </div>
-                <button
-                  className="btn bg-main text-white w-100"
-                  onClick={placeOrderHandler}
-                  disabled={loading}
-                >
-                  {loading ? 'Processing...' : 'Place Order'}
-                </button>
+
               </div>
             </div>
           </div>
