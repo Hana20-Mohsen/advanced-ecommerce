@@ -296,7 +296,7 @@ export default function ProductDetails() {
                                 {data.data.product.reviews
                                     .slice(0, showAllReviews ? data.data.product.reviews.length : 3)
                                     .map((review) => (
-                                        <div key={review._id} className="review-item mb-4 p-3 rounded overflow-scroll" style={{ backgroundColor: '#2a2a2a' }}>
+                                        <div key={review._id} className="review-item mb-4 p-3 rounded " style={{ backgroundColor: '#2a2a2a' }}>
                                             <div className="d-flex justify-content-between align-items-center mb-2">
                                                 <h5 className="mb-0">{review.userName}</h5>
                                                 <div className="rating">
@@ -313,7 +313,7 @@ export default function ProductDetails() {
                                                     ))}
                                                 </div>
                                             </div>
-                                            <p className="mb-2">{review.comment}</p>
+                                            <p className={`${styles.comment_text} mb-2 `}>{review.comment}</p>
                                             <small className="text-muted">
                                                 {new Date(review.createdAt).toLocaleDateString('en-US', {
                                                     year: 'numeric',

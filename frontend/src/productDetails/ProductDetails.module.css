@@ -58,3 +58,9 @@
     background-color: #2ff3e0;
     color: #000;
 }
+.comment_text{
+    word-wrap: break-word;
+overflow-wrap: break-word;
+/* max-height: 70px;
+overflow-y: scroll; */
+}
