@@ -78,7 +78,7 @@ let [delivered , setdelivered]=useState([])
   if (loading) return <Loader />;
 
   return (
-    <div className="Dark-Color text-white py-5">
+    <div className="mainSlider_bg min-vh-100 text-white py-5">
       <div className=' my-4 pt-4 position-fixed ms-1'>
               <Link to="/cart"> <i className="fa-solid fa-circle-arrow-left main-color fs-2 pt-2"></i></Link>
             </div>
@@ -92,8 +92,8 @@ let [delivered , setdelivered]=useState([])
             </Link>
           </div>
         ) : (
-          <div className="table-responsive">
-            <table className="table table-dark table-hover">
+          <div className="table-responsive main-color-border p-3 rounded-3">
+            <table className="table table-dark  table-hover">
               <thead>
                 <tr>
                   <th>ID</th>
@@ -105,7 +105,7 @@ let [delivered , setdelivered]=useState([])
                   
                 </tr>
               </thead>
-              <tbody>
+              <tbody className=''>
                 {orders.map((order) => (
                   <tr key={order._id}>
                     <td>{order._id}</td>

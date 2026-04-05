@@ -89,9 +89,9 @@ export default function Cart() {
   }
 
   return (
-    <div className="mainSlider_bg  text-white mt-5 position-relative">
+    <div className="mainSlider_bg min-vh-100 text-white mt-5 position-relative">
 
-      <div className="container mainSlider_bg py-5">
+      <div className="container  py-5">
         <div className=" mt-4 pt-4 ms-3">
           <Link to="/products">
             {" "}
